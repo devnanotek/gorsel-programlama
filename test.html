@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<!--
+  ┌──────────────────────────────────────────┐
+  │  C# Windows Forms - Bilgi Testi         │
+  │  Görsel Programlama I - 25 Soru         │
+  │                                          │
+  │  Hazırlayan: DEVNANOTEK - İslam ERGÜN   │
+  │  Mardin Artuklu Üniversitesi            │
+  │  Bilgisayar Programcılığı - 1. Sınıf   │
+  └──────────────────────────────────────────┘
+-->
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="DEVNANOTEK - İslam ERGÜN">
+  <title>C# Windows Forms - Bilgi Testi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1120; --card: #111827; --border: #1e293b;
+      --text: #e2e8f0; --text2: #94a3b8; --muted: #64748b;
+      --sky: #38bdf8; --green: #4ade80; --amber: #fbbf24;
+      --purple: #c084fc; --red: #f87171; --pink: #f472b6;
+    }
+    * { box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; min-height:100vh; }
+
+    .container-custom { max-width: 800px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+
+    h1 { font-size: 2rem; font-weight: 800; text-align: center; background: linear-gradient(135deg, var(--sky), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.3rem; }
+    .subtitle { text-align: center; color: var(--text2); margin-bottom: 2.5rem; font-size: 0.95rem; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text2); text-decoration: none; font-size: 0.85rem; margin-bottom: 1.5rem; transition: color 0.15s; }
+    .back-link:hover { color: var(--sky); }
+
+    /* Progress */
+    .progress-wrap { position: sticky; top: 0; background: rgba(11,17,32,0.95); backdrop-filter: blur(8px); z-index: 10; padding: 0.75rem 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .progress { height: 8px; background: #1e293b; border-radius: 4px; overflow: hidden; }
+    .progress-bar { height: 100%; background: linear-gradient(90deg, var(--sky), var(--purple)); border-radius: 4px; transition: width 0.5s ease; }
+    .progress-text { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); margin-bottom: 0.5rem; }
+
+    /* Question Card */
+    .question-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem; transition: border-color 0.3s; }
+    .question-card.answered { border-color: #334155; }
+    .question-card.correct { border-color: var(--green) !important; background: rgba(74,222,128,0.03); }
+    .question-card.wrong   { border-color: var(--red) !important; background: rgba(248,113,113,0.03); }
+    .question-card.empty   { border-color: var(--amber) !important; background: rgba(251,191,36,0.03); }
+
+    .q-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #1e293b; color: var(--text2); font-size: 0.75rem; font-weight: 700; margin-right: 0.75rem; flex-shrink: 0; }
+    .q-num.correct-num { background: var(--green); color: #000; }
+    .q-num.wrong-num   { background: var(--red); color: #fff; }
+    .q-num.empty-num   { background: var(--amber); color: #000; }
+
+    .q-header { display: flex; align-items: flex-start; margin-bottom: 1rem; }
+    .q-header h3 { font-size: 1rem; font-weight: 600; color: var(--text); margin: 0; line-height: 1.5; }
+
+    .option { display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 1rem; border: 2px solid var(--border); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; color: var(--text2); }
+    .option:hover { border-color: #475569; background: rgba(255,255,255,0.02); }
+    .option.selected { border-color: var(--sky); background: rgba(56,189,248,0.08); color: var(--text); }
+    .option.correct-answer { border-color: var(--green) !important; background: rgba(74,222,128,0.1) !important; color: var(--green) !important; }
+    .option.wrong-answer   { border-color: var(--red) !important; background: rgba(248,113,113,0.1) !important; color: var(--red) !important; }
+    .option.disabled { pointer-events: none; opacity: 0.7; }
+
+    .option-letter { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #1e293b; color: var(--text2); font-weight: 700; font-size: 0.8rem; flex-shrink: 0; }
+    .option.selected .option-letter { background: var(--sky); color: #000; }
+    .option.correct-answer .option-letter { background: var(--green); color: #000; }
+    .option.wrong-answer .option-letter { background: var(--red); color: #fff; }
+
+    .feedback { margin-top: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.8rem; display: none; }
+    .feedback.show { display: block; }
+    .feedback.correct-fb { background: rgba(74,222,128,0.08); color: var(--green); }
+    .feedback.wrong-fb   { background: rgba(248,113,113,0.08); color: var(--red); }
+    .feedback.empty-fb   { background: rgba(251,191,36,0.08); color: var(--amber); }
+
+    /* Actions */
+    .actions { text-align: center; margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-sonuc { background: linear-gradient(135deg, var(--sky), var(--purple)); color: #fff; border: none; padding: 0.75rem 2.5rem; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+    .btn-sonuc:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(56,189,248,0.25); }
+    .btn-sonuc:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-reset { background: transparent; color: var(--text2); border: 2px solid var(--border); padding: 0.75rem 2rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-reset:hover { border-color: var(--text2); color: var(--text); }
+
+    /* Result Overlay */
+    .result-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; padding: 1rem; }
+    .result-overlay.show { display: flex; }
+    .result-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2.5rem 2rem; text-align: center; max-width: 500px; width: 100%; }
+    .result-emoji { font-size: 4rem; margin-bottom: 1rem; }
+    .result-score { font-size: 3.5rem; font-weight: 800; background: linear-gradient(135deg, var(--sky), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .result-label { color: var(--text2); font-size: 1rem; margin: 0.5rem 0 1.5rem; }
+    .result-bar { height: 12px; background: #1e293b; border-radius: 6px; overflow: hidden; margin: 1.5rem 0; }
+    .result-bar-fill { height: 100%; border-radius: 6px; transition: width 1s ease; }
+    .result-msg { color: var(--text2); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6; }
+    .btn-close-result { background: var(--sky); color: #000; border: none; padding: 0.6rem 2rem; border-radius: 10px; font-weight: 700; cursor: pointer; margin: 0 0.3rem; transition: all 0.2s; }
+    .btn-close-result:hover { background: #7dd3fc; }
+    .btn-outline-result { background: transparent; color: var(--text2); border: 2px solid var(--border); padding: 0.6rem 2rem; border-radius: 10px; font-weight: 600; cursor: pointer; margin: 0 0.3rem; transition: all 0.2s; }
+    .btn-outline-result:hover { border-color: var(--text2); color: var(--text); }
+  </style>
+</head>
+<body>
+
+<div class="container-custom">
+  <a href="index.html" class="back-link"><i class="bi bi-arrow-left"></i> Çalışma Sayfasına Dön</a>
+  <h1>Bilgi Testi</h1>
+  <p class="subtitle">25 soru · Öğrendiklerini pekiştir</p>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-text">
+      <span id="answered-count">0 / 25 cevaplandı</span>
+      <span id="correct-count">0 doğru</span>
+    </div>
+    <div class="progress">
+      <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- Questions -->
+  <div id="questions-container"></div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button class="btn-sonuc" id="btn-check" onclick="checkAll()">Sonuçları Göster <i class="bi bi-chevron-right"></i></button>
+    <button class="btn-reset" onclick="resetTest()"><i class="bi bi-arrow-clockwise"></i> Testi Sıfırla</button>
+  </div>
+</div>
+
+<!-- Result Overlay -->
+<div class="result-overlay" id="result-overlay">
+  <div class="result-card">
+    <div class="result-emoji" id="result-emoji"></div>
+    <div class="result-score" id="result-score"></div>
+    <div class="result-label" id="result-label"></div>
+    <div class="d-flex justify-content-center gap-3 mb-2" style="font-size:0.85rem;">
+      <span style="color:var(--green)" id="result-correct-count"></span>
+      <span style="color:var(--red)" id="result-wrong-count"></span>
+      <span style="color:var(--amber)" id="result-empty-count"></span>
+    </div>
+    <div class="result-bar">
+      <div class="result-bar-fill" id="result-bar-fill" style="width:0%"></div>
+    </div>
+    <div class="result-msg" id="result-msg"></div>
+    <button class="btn-close-result" onclick="closeResult()">Cevapları İncele</button>
+    <button class="btn-outline-result" onclick="location.reload()">Testi Tekrarla</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script>
+// ==================== QUESTION BANK ====================
+var questions = [
+  {
+    question: "Bir değişkene 'Fatih' yazısını kaydetmek istiyorsun. Hangi değişken tipini kullanmalısın?",
+    options: ["int", "double", "string", "bool"],
+    correct: 2,
+    explanation: "<strong>string</strong> = yazı saklar. 'Fatih' bir yazıdır, bu yüzden pembe kutu (string) gerekir. int sadece tam sayı, double ondalıklı sayı, bool ise true/false saklar."
+  },
+  {
+    question: "label1'in üzerindeki yazıyı değiştirmek için hangisi kullanılır?",
+    options: ["label1.Name = \"yeni\"", "label1.Text = \"yeni\"", "label1.Value = \"yeni\"", "label1.SetText(\"yeni\")"],
+    correct: 1,
+    explanation: "<strong>.Text</strong> özelliği, kontrolün üzerindeki yazıyı tutar. Label, Button, TextBox gibi birçok kontrolde yazıyı değiştirmek için .Text kullanılır."
+  },
+  {
+    question: "TextBox'taki yazıyı bir değişkene aktarmak istiyorsun. Hangisi doğrudur?",
+    options: ["string yazi = TextBox.Text", "string yazi = textBox1.Text", "string yazi = textBox1.Value", "textBox1.Text = string yazi"],
+    correct: 1,
+    explanation: "TextBox'ın adı <strong>textBox1</strong>, özelliği <strong>.Text</strong>. Doğru kullanım: <code>string yazi = textBox1.Text;</code> — kontrolün adını doğru yazmak çok önemli!"
+  },
+  {
+    question: "Convert.ToInt16() ne işe yarar?",
+    options: ["Sayıyı yazıya çevirir", "Yazıyı tam sayıya çevirir", "Label'ı gizler", "Formu kapatır"],
+    correct: 1,
+    explanation: "<strong>Convert.ToInt16()</strong> = yazıyı (string) tam sayıya (int) çevirir. TextBox'tan gelen değer her zaman yazıdır, matematik işlemi yapmak için önce sayıya çevirmelisin."
+  },
+  {
+    question: "int sayi = 42; Bu sayıyı label1'de göstermek için hangisi doğrudur?",
+    options: ["label1.Text = sayi;", "label1.Text = sayi.ToString();", "label1.Value = sayi;", "sayi = label1.Text;"],
+    correct: 1,
+    explanation: "Label <strong>sadece yazı (string)</strong> kabul eder. Sayıyı yazıya çevirmek için <strong>.ToString()</strong> kullanmalısın: <code>label1.Text = sayi.ToString();</code>"
+  },
+  {
+    question: "Kullanıcı 5 ve 3 girerse, textBox1.Text + textBox2.Text sonucu ne olur?",
+    options: ["8", "53", "Hata verir", "0"],
+    correct: 1,
+    explanation: "TextBox'taki değerler <strong>yazıdır (string)</strong>. Yazılar + ile toplanmaz, <strong>birleşir</strong>: \"5\" + \"3\" = \"53\". Toplama yapmak için önce Convert.ToInt16() ile sayıya çevirmelisin."
+  },
+  {
+    question: "if (sayi == 10) yazmakla if (sayi = 10) yazmak arasındaki fark nedir?",
+    options: ["İkisi de aynı şeydir", "== karşılaştırır, = değer atar", "= karşılaştırır, == değer atar", "Hiçbir fark yoktur"],
+    correct: 1,
+    explanation: "<strong>==</strong> (çift eşittir) = karşılaştırma yapar, 'eşit mi?' diye sorar.<br><strong>=</strong> (tek eşittir) = değer atar, kutunun içine değer koyar.<br>if içinde her zaman == kullan!"
+  },
+  {
+    question: "if (x > 5 && x < 20) koşulu ne zaman doğru olur?",
+    options: ["x 5'ten küçükse", "x 20'den büyükse", "x 5 ile 20 arasındaysa", "x 5 veya 20 ise"],
+    correct: 2,
+    explanation: "<strong>&&</strong> = VE operatörü. İki koşulun <strong>ikisi de doğru</strong> olmalı. x > 5 <strong>VE</strong> x < 20, yani x 5 ile 20 arasında olmalı."
+  },
+  {
+    question: "for (int i = 0; i < 3; i++) döngüsü kaç kere çalışır?",
+    options: ["1", "2", "3", "4"],
+    correct: 2,
+    explanation: "i = 0, 1, 2 olmak üzere <strong>3 kere</strong> çalışır. i=3 olduğunda koşul (3 < 3) yanlış olur ve döngü durur. i 0'dan başlar, 3'ten küçük olduğu sürece devam eder."
+  },
+  {
+    question: "for (int i = 1; i <= 10; i++) döngüsünde i'nin alacağı son değer nedir?",
+    options: ["9", "10", "11", "Sonsuz döngü"],
+    correct: 1,
+    explanation: "i=10 olduğunda koşul (10 <= 10) hala doğrudur, döngü bir kez daha çalışır. Sonra i 11 olur, 11 <= 10 yanlış olur ve döngü biter. Son çalışan i değeri <strong>10</strong>'dur."
+  },
+  {
+    question: "saniye++ ifadesi ne yapar?",
+    options: ["Saniyeyi 2 artırır", "Saniyeyi 1 artırır", "Saniyeyi 1 azaltır", "Saniyeyi sıfırlar"],
+    correct: 1,
+    explanation: "<strong>++</strong> = değişkeni 1 artır. <code>saniye++;</code> ile <code>saniye = saniye + 1;</code> aynı şeydir. <code>sayac--</code> ise 1 azaltır."
+  },
+  {
+    question: "5 % 2 işleminin sonucu nedir?",
+    options: ["2", "2.5", "1", "0"],
+    correct: 2,
+    explanation: "<strong>%</strong> = mod (kalan) operatörü. 5'i 2'ye bölünce bölüm 2, <strong>kalan 1</strong>'dir. % işareti sana kalanı verir. sayi % 2 == 0 demek 'sayı çift mi?' demektir."
+  },
+  {
+    question: "string[] sehirler = {\"A\", \"B\", \"C\"}; Dizide sehirler[1] nedir?",
+    options: ["A", "B", "C", "Hata"],
+    correct: 1,
+    explanation: "C#'ta diziler <strong>0'dan başlar!</strong> sehirler[0] = \"A\", sehirler[1] = \"B\", sehirler[2] = \"C\". İlk eleman 0 numaralıdır, BUNU UNUTMA!"
+  },
+  {
+    question: "sehirler.Length neyi verir?",
+    options: ["İlk elemanı", "Son elemanı", "Dizideki toplam eleman sayısını", "Dizinin tipini"],
+    correct: 2,
+    explanation: "<strong>.Length</strong> = dizide kaç eleman olduğunu söyler. <code>new string[5]</code> için Length = 5'tir. Ama indeksler 0-4 arasıdır!"
+  },
+  {
+    question: "MessageBox.Show(\"Merhaba\", \"Başlık\", MessageBoxButtons.OKCancel, MessageBoxIcon.Information); Bu kodun çıktısı nedir?",
+    options: ["Sadece 'Merhaba' yazar", "'Merhaba' yazılı, 'Başlık' başlıklı, Tamam/İptal butonlu bir pencere", "'Başlık' yazılı bir pencere", "Hata verir"],
+    correct: 1,
+    explanation: "<strong>MessageBox.Show(</strong>mesaj, başlık, butonlar, simge<strong>)</strong>. Bu kod: mesaj='Merhaba', başlık='Başlık', OKCancel butonları ve mavi bilgi simgesi olan bir pencere açar."
+  },
+  {
+    question: "string isim = \"Ali\"; MessageBox.Show(\"Hosgeldin: \" + isim); Bu kodun çıktısı nedir?",
+    options: ["Hosgeldin: isim", "Hosgeldin: Ali", "Hata verir", "Ali"],
+    correct: 1,
+    explanation: "<strong>+</strong> işareti yazıları birleştirir. \"Hosgeldin: \" + \"Ali\" = \"Hosgeldin: Ali\". Değişkenin İSMİNİ değil, DEĞERİNİ kullanır."
+  },
+  {
+    question: "Timer ne işe yarar?",
+    options: ["Zamanı gösterir", "Belirli aralıklarla otomatik kod çalıştırır", "Programı bekletir", "Saati ayarlar"],
+    correct: 1,
+    explanation: "<strong>Timer</strong> = belirlediğin aralıklarla (Interval) otomatik olarak Tick olayını çalıştıran bir araç. Dijital saat, renk değiştirme gibi şeyler için kullanılır."
+  },
+  {
+    question: "Random uret = new Random(); int sayi = uret.Next(1, 5); sayi en fazla kaç olabilir?",
+    options: ["5", "4", "1", "Sonsuz"],
+    correct: 1,
+    explanation: "<strong>Next(1, 5)</strong> = 1 dahil, 5 <strong>hariç</strong>. Yani 1, 2, 3, 4 üretir. 5 ASLA üretmez. İkinci parametre her zaman hariçtir!"
+  },
+  {
+    question: "Bir formdan diğerine veri göndermek için değişken nasıl tanımlanmalı?",
+    options: ["private string mesaj;", "string mesaj;", "public string mesaj;", "static string mesaj;"],
+    correct: 2,
+    explanation: "<strong>public</strong> = her yerden erişilebilir. Form1'den Form2'ye veri göndermek için Form2'deki değişken public olmalı. private sadece kendi formu içinde geçerlidir."
+  },
+  {
+    question: "Application.Exit() ne yapar?",
+    options: ["Formu gizler", "Formu kapatır", "Programı tamamen kapatır", "Bilgisayarı kapatır"],
+    correct: 2,
+    explanation: "<strong>Application.Exit()</strong> = programı <strong>tamamen</strong> sonlandırır, tüm formları kapatır. <code>this.Hide()</code> sadece o formu gizler, program çalışmaya devam eder."
+  },
+  {
+    question: "CheckBox işaretlendiğinde hangi özellik true olur?",
+    options: [".Text", ".Enabled", ".Visible", ".Checked"],
+    correct: 3,
+    explanation: "<strong>.Checked</strong> = CheckBox'ın işaretli olup olmadığını gösterir. İşaretliyse <code>true</code>, değilse <code>false</code>. <code>if (checkBox1.Checked == true)</code> ile kontrol edersin."
+  },
+  {
+    question: "RadioButton ile CheckBox arasındaki temel fark nedir?",
+    options: ["Hiçbir fark yoktur", "RadioButton tek seçim, CheckBox çoklu seçim içindir", "CheckBox sadece yazı gösterir", "RadioButton gizlenebilir"],
+    correct: 1,
+    explanation: "<strong>RadioButton</strong> = bir grupta sadece biri seçilir (cinsiyet seçimi gibi).<br><strong>CheckBox</strong> = birden fazlası aynı anda işaretlenebilir (hobiler gibi)."
+  },
+  {
+    question: "ComboBox'a yeni bir şehir eklemek için hangisi kullanılır?",
+    options: ["comboBox1.Text = \"Mardin\"", "comboBox1.Add(\"Mardin\")", "comboBox1.Items.Add(\"Mardin\")", "comboBox1.Value = \"Mardin\""],
+    correct: 2,
+    explanation: "<strong>.Items.Add()</strong> = listeye eleman ekler. ComboBox ve ListBox'ta aynı şekilde kullanılır: <code>comboBox1.Items.Add(\"Mardin\");</code>"
+  },
+  {
+    question: "Kodla yeni bir buton oluşturduktan sonra, formda görünmesi için ne yapmalısın?",
+    options: ["btn.Show()", "btn.Visible = true", "this.Controls.Add(btn)", "Hiçbir şey, otomatik görünür"],
+    correct: 2,
+    explanation: "Kodla oluşturduğun kontrolü <strong>this.Controls.Add(kontrol)</strong> ile forma eklemezsen görünmez! Oluşturmak yetmez, forma eklemek de şart."
+  },
+  {
+    question: "ProgressBar'ın Value özelliği 100 iken += 10 yaparsan ne olur?",
+    options: ["110 olur", "Hata verir", "100 kalır (örn. koddaki if kontrolüyle)", "0 olur"],
+    correct: 2,
+    explanation: "ProgressBar.Value 0-100 arasındadır. 100'ü geçemez. Genelde <code>if (progressBar1.Value < 100)</code> kontrolüyle korunur, değilse 100'de sabit kalır."
+  }
+];
+
+// ==================== RENDER ====================
+var userAnswers = new Array(questions.length).fill(-1);
+var checked = false;
+
+function renderQuestions() {
+  var html = '';
+  $.each(questions, function(i, q) {
+    html += '<div class="question-card" id="q-card-' + i + '">';
+    html += '<div class="q-header"><span class="q-num" id="q-num-' + i + '">' + (i+1) + '</span><h3>' + q.question + '</h3></div>';
+    $.each(q.options, function(j, opt) {
+      html += '<div class="option" data-q="' + i + '" data-o="' + j + '" id="opt-' + i + '-' + j + '">';
+      html += '<span class="option-letter">' + String.fromCharCode(65 + j) + '</span>';
+      html += opt;
+      html += '</div>';
+    });
+    html += '<div class="feedback" id="fb-' + i + '"></div>';
+    html += '</div>';
+  });
+  $('#questions-container').html(html);
+}
+
+function selectOption(qIndex, oIndex) {
+  if (checked) return;
+
+  userAnswers[qIndex] = oIndex;
+
+  var $card = $('#q-card-' + qIndex);
+  $card.find('.option').removeClass('selected');
+  $('#opt-' + qIndex + '-' + oIndex).addClass('selected');
+  if (!$card.hasClass('answered')) {
+    $card.addClass('answered');
+  }
+
+  updateProgress();
+}
+
+function updateProgress() {
+  var answered = userAnswers.filter(function(a) { return a !== -1; }).length;
+  var pct = Math.round((answered / questions.length) * 100);
+  $('#answered-count').text(answered + ' / ' + questions.length + ' cevaplandı');
+  $('#progress-bar').css('width', pct + '%');
+}
+
+function checkAll() {
+  checked = true;
+  var correct = 0;
+  var wrong = 0;
+  var empty = 0;
+
+  $.each(questions, function(i, q) {
+    var userAns = userAnswers[i];
+    var $card = $('#q-card-' + i);
+    var $num = $('#q-num-' + i);
+    var $fb = $('#fb-' + i);
+
+    // Highlight correct answer always
+    $('#opt-' + i + '-' + q.correct).addClass('correct-answer');
+
+    if (userAns === -1) {
+      // Boş bırakıldı
+      empty++;
+      $card.addClass('empty');
+      $num.addClass('empty-num');
+      $fb.addClass('empty-fb show').html('<i class="bi bi-dash-circle-fill me-1"></i><strong>Boş bıraktın!</strong> Doğru cevap: <strong style="color:var(--green)">' + q.options[q.correct] + '</strong> — ' + q.explanation);
+    } else if (userAns === q.correct) {
+      correct++;
+      $card.addClass('correct');
+      $num.addClass('correct-num');
+      $fb.addClass('correct-fb show').html('<i class="bi bi-check-circle-fill me-1"></i> Doğru! ✓');
+    } else {
+      wrong++;
+      $card.addClass('wrong');
+      $num.addClass('wrong-num');
+      $('#opt-' + i + '-' + userAns).addClass('wrong-answer');
+      $fb.addClass('wrong-fb show').html('<i class="bi bi-x-circle-fill me-1"></i> Senin cevabın: <strong style="color:var(--red)">' + q.options[userAns] + '</strong>. Doğru cevap: <strong style="color:var(--green)">' + q.options[q.correct] + '</strong><br>' + q.explanation);
+    }
+
+    $card.find('.option').addClass('disabled');
+  });
+
+  $('#correct-count').text(correct + ' doğru, ' + wrong + ' yanlış, ' + empty + ' boş');
+  showResult(correct, wrong, empty);
+
+  $('html, body').animate({ scrollTop: 0 }, 400);
+}
+
+function showResult(correct, wrong, empty) {
+  var total = questions.length;
+  var pct = Math.round((correct / total) * 100);
+  var emoji, msg, barColor;
+
+  if (pct === 100) {
+    emoji = '🏆'; barColor = 'var(--green)';
+    msg = 'Mükemmel! Tüm soruları doğru bildin. C# Windows Forms\'un ustası olmuşsun!';
+  } else if (pct >= 80) {
+    emoji = '🌟'; barColor = 'linear-gradient(90deg, var(--green), var(--sky))';
+    msg = 'Çok iyi! Konuların çoğuna hakimsin. Yanlış ve boşları inceleyip eksiklerini tamamla.';
+  } else if (pct >= 60) {
+    emoji = '👍'; barColor = 'linear-gradient(90deg, var(--amber), var(--green))';
+    msg = 'İyi başlangıç! Aşağıdaki açıklamaları oku, öğrenme sayfasına göz at, tekrar dene.';
+  } else if (pct >= 40) {
+    emoji = '📖'; barColor = 'linear-gradient(90deg, var(--amber), var(--sky))';
+    msg = 'Daha çok çalışmalısın. Her sorunun altındaki açıklamaları oku, öğrenme sayfasını incele.';
+  } else {
+    emoji = '💪'; barColor = 'linear-gradient(90deg, var(--red), var(--amber))';
+    msg = 'Pes etme! Her sorunun cevabı ve açıklaması aşağıda. Öğrenme sayfasını baştan sona oku, sonra tekrar test et!';
+  }
+
+  $('#result-emoji').text(emoji);
+  $('#result-score').text('%' + pct);
+  $('#result-label').text(correct + ' / ' + total + ' doğru (' + pct + '%)');
+  $('#result-correct-count').html('<i class="bi bi-check-circle-fill me-1"></i>' + correct + ' Doğru');
+  $('#result-wrong-count').html('<i class="bi bi-x-circle-fill me-1"></i>' + wrong + ' Yanlış');
+  $('#result-empty-count').html('<i class="bi bi-dash-circle-fill me-1"></i>' + empty + ' Boş');
+  $('#result-bar-fill').css({ width: pct + '%', background: barColor });
+  $('#result-msg').html(msg);
+  $('#result-overlay').addClass('show');
+  $('#btn-check').prop('disabled', true);
+}
+
+function closeResult() {
+  $('#result-overlay').removeClass('show');
+
+  // Scroll to first wrong or first question
+  var firstWrong = $('.question-card.wrong').first();
+  if (firstWrong.length) {
+    $('html, body').animate({ scrollTop: firstWrong.offset().top - 100 }, 500);
+  }
+}
+
+function resetTest() {
+  checked = false;
+  userAnswers.fill(-1);
+  $('.question-card').removeClass('answered correct wrong empty');
+  $('.q-num').removeClass('correct-num wrong-num empty-num');
+  $('.option').removeClass('selected correct-answer wrong-answer disabled');
+  $('.feedback').removeClass('show correct-fb wrong-fb empty-fb').html('');
+  $('#correct-count').text('0 doğru, 0 yanlış, 0 boş');
+  $('#answered-count').text('0 / ' + questions.length + ' cevaplandı');
+  $('#progress-bar').css('width', '0%');
+  $('#result-overlay').removeClass('show');
+  $('#btn-check').prop('disabled', false);
+  $('html, body').animate({ scrollTop: 0 }, 300);
+}
+
+// ==================== INIT ====================
+$(function() {
+  renderQuestions();
+
+  $('#questions-container').on('click', '.option', function() {
+    var qIndex = parseInt($(this).data('q'));
+    var oIndex = parseInt($(this).data('o'));
+    selectOption(qIndex, oIndex);
+  });
+
+  // Close overlay on Escape
+  $(document).on('keydown', function(e) {
+    if (e.key === 'Escape') closeResult();
+  });
+
+  // Close overlay on backdrop click
+  $('#result-overlay').on('click', function(e) {
+    if (e.target === this) closeResult();
+  });
+});
+</script>
+</body>
+</html>

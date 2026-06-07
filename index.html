@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<!--
+  ┌──────────────────────────────────────────┐
+  │  C# Windows Forms Çalışma Sayfası       │
+  │  Görsel Programlama I - Final Materyali │
+  │                                          │
+  │  Hazırlayan: DEVNANOTEK - İslam ERGÜN   │
+  │  Mardin Artuklu Üniversitesi            │
+  │  Bilgisayar Programcılığı - 1. Sınıf   │
+  │                                          │
+  │  Öğr.Gör.Dr. Muhammed Fatih Ağalda      │
+  └──────────────────────────────────────────┘
+-->
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="DEVNANOTEK - İslam ERGÜN">
+  <title>C# Windows Forms Çalışma Sayfası</title>
+
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Highlight.js (C# teması) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-main: #0f172a;
+      --bg-card: #1e293b;
+      --bg-sidebar: #1e293b;
+      --border: #334155;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --sky: #38bdf8;
+      --green: #4ade80;
+      --amber: #fbbf24;
+      --purple: #c084fc;
+      --sidebar-width: 260px;
+    }
+
+    body {
+      background: var(--bg-main);
+      color: var(--text-primary);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ========== SIDEBAR ========== */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-width);
+      height: 100vh;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      z-index: 1040;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      padding: 1.25rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.75rem;
+    }
+
+    .sidebar-nav::-webkit-scrollbar { width: 4px; }
+    .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+    .sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .sidebar-footer {
+      padding: 0.75rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.625rem;
+      color: var(--text-muted);
+    }
+
+    .nav-topic {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+      margin-bottom: 2px;
+    }
+
+    .nav-topic:hover {
+      background: rgba(51, 65, 85, 0.5);
+      color: var(--text-primary);
+    }
+    .nav-topic.active {
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--sky);
+      border-left-color: var(--sky);
+      font-weight: 600;
+    }
+    .nav-topic .badge-num {
+      opacity: 0.6;
+      margin-right: 0.375rem;
+    }
+
+    /* ========== MOBILE HEADER ========== */
+    .mobile-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+      z-index: 1030;
+    }
+
+    /* ========== SIDEBAR BACKDROP ========== */
+    .sidebar-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1035;
+      display: none;
+    }
+    .sidebar-backdrop.show { display: block; }
+
+    /* ========== MAIN CONTENT ========== */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+      padding-top: 0;
+    }
+
+    .content-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1rem;
+    }
+
+    /* ========== TOPIC CARD ========== */
+    .topic-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      transition: border-color 0.2s;
+    }
+    .topic-card:hover {
+      border-color: rgba(100, 116, 139, 0.5);
+    }
+
+    .badge-topic {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(192, 132, 252, 0.15);
+      color: var(--purple);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: 9999px;
+      margin-bottom: 1rem;
+    }
+
+    .topic-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .explanation-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: rgba(251, 191, 36, 0.05);
+      border-left: 3px solid rgba(251, 191, 36, 0.4);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .explanation-box .bi-lightbulb { color: var(--amber); margin-top: 0.125rem; flex-shrink: 0; }
+    .explanation-box p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.625; margin: 0; }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+    .section-label .bi { font-size: 0.875rem; }
+    .section-label.code-label .bi { color: var(--sky); }
+    .section-label.code-label span { color: var(--sky); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .code-block-wrapper {
+      position: relative;
+      margin-top: 0.75rem;
+    }
+    .code-block-wrapper pre {
+      margin: 0;
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+      background: #0b1120 !important;
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .code-block-wrapper pre::-webkit-scrollbar { width: 6px; height: 6px; }
+    .code-block-wrapper pre::-webkit-scrollbar-track { background: transparent; }
+    .code-block-wrapper pre::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+    .btn-copy {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      background: rgba(51, 65, 85, 0.8);
+      color: var(--text-secondary);
+      border: none;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      opacity: 0;
+      z-index: 5;
+    }
+    .code-block-wrapper:hover .btn-copy { opacity: 1; }
+    .btn-copy:hover { background: #475569; color: #fff; }
+
+    .output-box {
+      margin-top: 1rem;
+      border: 1px dashed rgba(74, 222, 128, 0.3);
+      border-radius: 0.5rem;
+      background: rgba(74, 222, 128, 0.05);
+      padding: 1rem;
+    }
+    .output-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .output-header .bi { color: var(--green); font-size: 0.9375rem; }
+    .output-header span { color: var(--green); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .output-box pre {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.625;
+      white-space: pre-wrap;
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      margin: 0;
+    }
+
+    /* ========== HERO ========== */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--sky);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: 9999px;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-desc {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.625;
+      max-width: 540px;
+    }
+
+    .hero-tip {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: rgba(251, 191, 36, 0.05);
+      border-left: 3px solid rgba(251, 191, 36, 0.4);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      max-width: 540px;
+      margin-top: 1.25rem;
+    }
+    .hero-tip .bi { color: var(--amber); margin-top: 0.125rem; flex-shrink: 0; }
+    .hero-tip p { color: var(--text-secondary); font-size: 0.75rem; line-height: 1.625; margin: 0; }
+
+    /* ========== SCROLL TO TOP ========== */
+    .btn-scroll-top {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 50%;
+      background: var(--sky);
+      color: #fff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      cursor: pointer;
+      z-index: 1020;
+      transition: all 0.2s;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+    }
+    .btn-scroll-top.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .btn-scroll-top:hover {
+      background: #7dd3fc;
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    /* ========== FOOTER ========== */
+    .page-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .page-footer .footer-text { color: var(--text-muted); font-size: 0.75rem; margin: 0; }
+    .page-footer .footer-sub { color: #475569; font-size: 0.625rem; margin-top: 0.25rem; }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 991.98px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .main-content {
+        margin-left: 0;
+      }
+      .content-wrapper {
+        padding-top: 4.5rem;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .mobile-header { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- MOBILE HEADER -->
+<header class="mobile-header d-lg-none">
+  <button class="btn btn-link text-secondary p-2 me-2" id="btn-menu" aria-label="Menüyü Aç">
+    <i class="bi bi-list" style="font-size:1.375rem;"></i>
+  </button>
+  <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center">
+    <i class="bi bi-mortarboard-fill" style="color:var(--sky);font-size:1.125rem;"></i>
+    <span class="fw-semibold small">C# Çalışma Sayfası</span>
+  </div>
+</header>
+
+<!-- SIDEBAR BACKDROP -->
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="d-flex justify-content-between align-items-start d-lg-none mb-2">
+      <button class="btn btn-link text-secondary p-1" id="btn-close-sidebar" aria-label="Menüyü Kapat">
+        <i class="bi bi-x" style="font-size:1.125rem;"></i>
+      </button>
+    </div>
+    <div class="text-uppercase small text-muted" style="font-size:0.625rem;letter-spacing:0.05em;">Mardin Artuklu Üniversitesi</div>
+    <div class="small mt-1" style="color:var(--sky);font-size:0.6875rem;">Görsel Prog. I · Final Çalışması</div>
+    <h1 class="fw-bold mt-1 mb-0" style="font-size:1.125rem;color:var(--text-primary);">C# Windows Forms</h1>
+    <p class="small text-secondary mt-1 mb-0" style="font-size:0.75rem;">33 Konu · Kod + Çıktı</p>
+  </div>
+  <nav class="sidebar-nav" id="sidebar-nav">
+    <div class="text-uppercase fw-semibold px-3 mb-2" style="font-size:0.625rem;color:var(--text-muted);letter-spacing:0.05em;">Konular</div>
+    <!-- JS ile doldurulacak -->
+  </nav>
+  <div class="sidebar-footer">
+    Bilgisayar Programcılığı · 1. Sınıf
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content" id="main-content">
+  <div class="content-wrapper">
+
+    <!-- TOP NAV LINKS -->
+    <div class="d-flex justify-content-center gap-2 mb-4 flex-wrap">
+      <a href="ogren.html" class="btn px-3 py-2 rounded-3 fw-semibold small" style="background:linear-gradient(135deg,var(--sky),var(--purple));color:#fff;border:none;">
+        <i class="bi bi-journal-bookmark-fill me-1"></i>Sıfırdan Öğren
+      </a>
+      <a href="test.html" class="btn px-3 py-2 rounded-3 fw-semibold small" style="background:rgba(56,189,248,0.12);color:var(--sky);border:1px solid rgba(56,189,248,0.3);">
+        <i class="bi bi-pencil-square me-1"></i>Teste Git
+      </a>
+    </div>
+
+    <!-- HERO -->
+    <div class="mb-5" id="hero">
+      <div class="hero-badge">
+        <i class="bi bi-book" style="font-size:0.6875rem;"></i>
+        Bilgisayar Programcılığı · 1. Sınıf · Final
+      </div>
+      <h1 class="hero-title">C# Windows Forms<br class="d-none d-sm-block"> Çalışma Sayfası</h1>
+      <p class="hero-desc">
+        Hocamız Fatih Ağalday'ın derste işlediği tüm konuları çok basit açıklamalarla,
+        kod örnekleriyle ve çıktılarıyla öğren!
+      </p>
+      <div class="hero-tip">
+        <i class="bi bi-book" style="font-size:1rem;"></i>
+        <p>
+          Her konunun altında <strong style="color:var(--sky);">Kod</strong> ve <strong style="color:var(--green);">Çıktı</strong> bölümleri var.
+          Kodu oku, çıktıyı anlamaya çalış! Buton: Kopyala ile kodu kopyalayıp Visual Studio'da deneyebilirsin.
+        </p>
+      </div>
+    </div>
+
+    <!-- TOPIC CARDS (JS ile doldurulacak) -->
+    <div id="topics-container"></div>
+
+    <!-- FOOTER -->
+    <footer class="page-footer">
+      <p class="footer-text">
+        Mardin Artuklu Üniversitesi · Bilgisayar Programcılığı · Görsel Programlama I · Öğretmen: Fatih Ağalday
+      </p>
+      <p class="footer-sub">Başarılar! 🎓</p>
+    </footer>
+
+  </div>
+</main>
+
+<!-- SCROLL TO TOP -->
+<button class="btn-scroll-top" id="btn-scroll-top" aria-label="Yukarı çık">
+  <i class="bi bi-chevron-up"></i>
+</button>
+
+<!-- jQuery -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<!-- Bootstrap 5.3 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Highlight.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+
+<script>
+// ==================== TOPIC DATA ====================
+var topics = [
+  {
+    id: "t1",
+    badge: "01 · Temel İşlem",
+    title: "Butona Basınca Yazı Değiştirme",
+    explanation: "Forma bir Label (yazı etiketi) ve bir Button (düğme) koyduk. Butona tıklayınca label'ın yazısını değiştiriyoruz. Düşün ki bir kağıda 'Merhaba' yazdın, butona basınca kağıttaki yazı 'Artuklu Üniversitesi' oluyor!",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    label1.Text = \"Artuklu Üniversitesi\";\n}",
+    output: "Önce: label1\nSonra: Artuklu Üniversitesi"
+  },
+  {
+    id: "t2",
+    badge: "02 · Temel İşlem",
+    title: "TextBox'taki Yazıyı Label'a Yazdırma",
+    explanation: "Kullanıcı bir TextBox'a (yazı kutusu) bir şeyler yazıyor. Butona basınca o yazıyı Label'a aktarıyoruz. Mesela kullanıcı 'Ankara' yazdı, butona basınca labelda 'Ankara' yazıyor.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    label1.Text = textBox1.Text;\n}",
+    output: "TextBox: Ankara → Label: Ankara"
+  },
+  {
+    id: "t3",
+    badge: "03 · Değişkenler",
+    title: "Değişken ile Veri Taşıma",
+    explanation: "Değişken, bir kutunun içine bir değer koymak gibidir. TextBox'tan aldığımız şehir adını 'sehir' adlı bir kutuya koyuyoruz, sonra o kutudaki değeri label'a yazdırıyoruz.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    string sehir;\n    sehir = textBox1.Text;\n    label1.Text = sehir;\n}",
+    output: "TextBox: Ankara → sehir = 'Ankara' → Label: Ankara"
+  },
+  {
+    id: "t4",
+    badge: "04 · Değişkenler",
+    title: "İki Sayıyı Toplama",
+    explanation: "İki TextBox'tan sayı alıp topluyoruz. Ama dikkat! TextBox'taki değerler yazı (string) olduğu için önce sayıya (int) çevirmemiz lazım. Convert.ToInt16() bunu yapıyor. Sonucu labelda gösteriyoruz.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    int sayi1, sayi2, sonuc;\n    sayi1 = Convert.ToInt16(textBox1.Text);\n    sayi2 = Convert.ToInt16(textBox2.Text);\n    sonuc = sayi1 + sayi2;\n    label3.Text = sonuc.ToString();\n    label3.Visible = true;\n}",
+    output: "Sayı1: 8 + Sayı2: 4 = 12"
+  },
+  {
+    id: "t5",
+    badge: "05 · Döngüler",
+    title: "For Döngüsü ile Üs Alma",
+    explanation: "2 üzeri 4 kaç eder? 2×2×2×2 = 16. For döngüsü ile bunu otomatik yapıyoruz. 'taban' ve 'üs' değerlerini TextBox'tan alıyoruz. Döngü 'üs' kadar dönüyor ve her seferinde sonucu taban ile çarpıyor.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    int sonuc = 1;\n    int taban = Convert.ToInt16(textBox1.Text);\n    int us = Convert.ToInt16(textBox2.Text);\n    for (int i = 1; i <= us; i++)\n    {\n        sonuc = sonuc * taban;\n    }\n    label3.Text = sonuc.ToString();\n}",
+    output: "Taban: 2, Üs: 4 → Sonuç: 16"
+  },
+  {
+    id: "t6",
+    badge: "06 · Döngüler",
+    title: "Faktöriyel Hesaplama",
+    explanation: "5 faktöriyel (5!) = 5×4×3×2×1 = 120. For döngüsü ile 1'den sayıya kadar tüm sayıları çarpıyoruz. fakt değişkeni her döngüde yeni değerle çarpılıyor.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    int fakt = 1;\n    int sayi = Convert.ToInt16(textBox1.Text);\n    for (int i = 1; i <= sayi; i++)\n    {\n        fakt = fakt * i;\n    }\n    label2.Text = fakt.ToString();\n}",
+    output: "Sayı: 5 → 5! = 5×4×3×2×1 = 120"
+  },
+  {
+    id: "t7",
+    badge: "07 · Hesaplama",
+    title: "Restoran Menü Fiyat Hesaplama",
+    explanation: "Bir restoranda Tavuk (200TL), Mantı (180TL), Börek (120TL) fiyatları var. Müşteri kaçar adet istediğini yazıyor. 'Hesapla' butonu tıklanınca anlık hesap ve toplam hesap hesaplanıyor.",
+    code: "int hesapla = 0;\nint total = 0;\n\nprivate void button1_Click(object sender, EventArgs e)\n{\n    int tavuk = int.Parse(txtTavuk.Text);\n    int manti = int.Parse(txtManti.Text);\n    int borek = int.Parse(txtBorek.Text);\n    hesapla = tavuk * 200 + manti * 180 + borek * 120;\n    labelHesap.Text = hesapla + \"TL\";\n    total = total + hesapla;\n    labelTotal.Text = total.ToString() + \"TL\";\n    txtTavuk.Text = \"0\";\n    txtManti.Text = \"0\";\n    txtBorek.Text = \"0\";\n}",
+    output: "Tavuk:2(400TL) + Mantı:3(540TL) + Börek:2(240TL)\nHesap: 940TL | Total: 940TL"
+  },
+  {
+    id: "t8",
+    badge: "08 · MessageBox",
+    title: "MessageBox ile Bilgi Penceresi Açma",
+    explanation: "MessageBox, ekranda küçük bir pencere açar. Mesaj, başlık, butonlar ve simge ekleyebiliriz. 'Öğrenci İşleri' başlıklı, 'Tamam/İptal' butonlu, bilgi simgeli bir pencere açıyoruz.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    MessageBox.Show(\n        \"Personel Güncelleme Başarısı\",\n        \"Öğrenci İşleri\",\n        MessageBoxButtons.OKCancel,\n        MessageBoxIcon.Information\n    );\n}",
+    output: "[Pencere Açılır]\nBaşlık: Öğrenci İşleri\nMesaj: Personel Güncelleme Başarısı\nButonlar: [Tamam] [İptal]\nSimge: Mavi bilgi simgesi (i)"
+  },
+  {
+    id: "t9",
+    badge: "09 · MessageBox",
+    title: "MessageBox'ta Değişken Kullanma",
+    explanation: "MessageBox'a direkt yazı yerine, bir değişkenin değerini de gösterebiliriz. 'user' değişkenindeki ismi mesajın içine ekliyoruz. String birleştirmede + işareti kullanılır.",
+    code: "string user = \"Fatih Ağalday\";\n\nprivate void button1_Click(object sender, EventArgs e)\n{\n    MessageBox.Show(\n        \"Hoşgeldin: \" + user,\n        \"Bilgilendirme\",\n        MessageBoxButtons.OKCancel,\n        MessageBoxIcon.Question\n    );\n}",
+    output: "[Pencere Açılır]\nBaşlık: Bilgilendirme\nMesaj: Hoşgeldin: Fatih Ağalday\nButonlar: [Tamam] [İptal]\nSimge: Soru işareti (?)"
+  },
+  {
+    id: "t10",
+    badge: "10 · Hesaplama",
+    title: "İki Sayının Dört İşlemi",
+    explanation: "İki sayıyla toplama, çıkarma, çarpma ve bölme yapıp sonuçları MessageBox'ta gösteriyoruz. \\n ile alt satıra geçiyoruz. int tam sayı bölmesi kullanıyoruz.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    int sayi1, sayi2, toplam, fark, carpim, bolum;\n    sayi1 = Convert.ToInt16(textBox1.Text);\n    sayi2 = Convert.ToInt16(textBox2.Text);\n    toplam = sayi1 + sayi2;\n    fark = sayi1 - sayi2;\n    carpim = sayi1 * sayi2;\n    bolum = sayi1 / sayi2;\n    MessageBox.Show(\n        \"\\nToplam: \" + toplam +\n        \"\\nFark: \" + fark +\n        \"\\nÇarpım: \" + carpim +\n        \"\\nBölüm: \" + bolum\n    );\n}",
+    output: "Sayı1: 8, Sayı2: 4\nToplam: 12\nFark: 4\nÇarpım: 32\nBölüm: 2"
+  },
+  {
+    id: "t11",
+    badge: "11 · Text İşlemleri",
+    title: "İki TextBox'taki Yazıyı Yer Değiştirme",
+    explanation: "'Nereden' ve 'Nereye' TextBox'ları var. Butona basınca yer değiştiriyorlar. Önce 'Nereden'deki değeri geçici 'sehir' değişkenine saklıyoruz (boş bir kutuya), sonra Nereye'dekini Nereden'e yazıyoruz, en son sakladığımız değeri Nereye'ye yazıyoruz.",
+    code: "private void pictureBox1_Click(object sender, EventArgs e)\n{\n    string sehir;\n    sehir = txtNereden.Text;\n    txtNereden.Text = txtNereye.Text;\n    txtNereye.Text = sehir;\n}",
+    output: "Önce: Nereden=Mardin, Nereye=Van\nSonra: Nereden=Van, Nereye=Mardin"
+  },
+  {
+    id: "t12",
+    badge: "12 · Temel İşlem",
+    title: "Programı Kapatma",
+    explanation: "PictureBox'a (resim kutusu) tıklayınca programı tamamen kapatıyoruz. Çıkış ikonuna basmak gibi. Application.Exit() tüm formu kapatır.",
+    code: "private void pictureBox2_Click(object sender, EventArgs e)\n{\n    Application.Exit();\n}",
+    output: "Program tamamen kapanır."
+  },
+  {
+    id: "t13",
+    badge: "13 · Hesaplama",
+    title: "Öğrenci Not Ortalaması Hesaplama",
+    explanation: "Öğrencinin adını ve iki sınav notunu alıyoruz. Ortalamasını hesaplıyor, ListBox'a (liste kutusu) ekliyoruz. Her yeni öğrenci listeye ekleniyor. double ondalıklı sayı kullanıyoruz.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    string adsoyad;\n    int not1, not2;\n    double ortalama;\n    adsoyad = textBox3.Text;\n    not1 = Convert.ToInt16(textBox2.Text);\n    not2 = Convert.ToInt16(textBox3.Text);\n    ortalama = ((not1 + not2)) / 2;\n    listBox1.Items.Add(adsoyad + \" \" + ortalama);\n}",
+    output: "Ad: Fatih Ağalday, Sınav1: 98, Sınav2: 78\nListBox: Fatih Ağalday 88\nAd: Merve Babaoğlu, Sınav1: 79, Sınav2: 100\nListBox: Fatih Ağalday 88, Merve Babaoğlu 89"
+  },
+  {
+    id: "t14",
+    badge: "14 · ComboBox",
+    title: "ComboBox'a Şehir Ekleme",
+    explanation: "ComboBox (açılır liste), tıklayınca seçeneklerin açıldığı bir kutudur. TextBox'a yazılan şehri ComboBox'a ekliyoruz. Items.Add() metodu ile yeni eleman eklenir.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    comboBoxSehir.Items.Add(textBoxSehir.Text);\n}",
+    output: "Şehir: Şanlıurfa yazıldı, Ekle butonuna basıldı\nComboBox'ta: Mardin, Diyarbakır, Şanlıurfa"
+  },
+  {
+    id: "t15",
+    badge: "15 · Hesaplama",
+    title: "Sinema Sipariş Hesaplama",
+    explanation: "Sinema salonunda Bilet (120TL), Mısır (40TL), İçecek (25TL), Su (15TL) fiyatları var. Müşteri adetleri girip 'Hesapla' butonuna basınca toplam tutar hesaplanıyor.",
+    code: "int kasatutar = 0;\n\nprivate void button1_Click(object sender, EventArgs e)\n{\n    int bilet = Convert.ToInt16(textBoxBilet.Text);\n    int misir = Convert.ToInt16(textBoxMisir.Text);\n    int icecek = Convert.ToInt16(textBoxIcecek.Text);\n    int su = Convert.ToInt16(textBoxSu.Text);\n    kasatutar = bilet * 120 + misir * 40 + icecek * 25 + su * 15;\n    labelTutar.Text = kasatutar.ToString();\n}",
+    output: "Bilet:2(240TL), Mısır:2(80TL)\nİçecek:1(25TL), Su:2(30TL)\nToplam: 375 TL"
+  },
+  {
+    id: "t16",
+    badge: "16 · Karar Yapıları",
+    title: "Vize ve Final Notundan Geçme/Kalma",
+    explanation: "Vize %30, Final %70 etkili. Ortalama 60 ve üzeriyse 'Geçti', değilse 'Kaldı' yazıyoruz. if-else karar yapısı kullanıyoruz. > 59 yazmamızın sebebi 59.5 gibi değerleri doğru yakalamak.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    double vize, final, sonuc;\n    string durum;\n    vize = Convert.ToInt16(textBoxVize.Text);\n    final = Convert.ToInt16(textBoxFinal.Text);\n    sonuc = vize * 3 / 10 + final * 7 / 10;\n    if (sonuc > 59)\n    {\n        durum = \"Geçti\";\n    }\n    else\n    {\n        durum = \"Kaldı\";\n    }\n    textBoxSonuc.Text = sonuc.ToString() + \"/\" + durum;\n}",
+    output: "Vize: 40, Final: 80\nSonuç: 40×0.3 + 80×0.7 = 12 + 56 = 68\nSonuç: 68/Geçti"
+  },
+  {
+    id: "t17",
+    badge: "17 · Karar Yapıları",
+    title: "Adete Göre İndirimli Fiyat Hesaplama",
+    explanation: "Dergi birim fiyatı 25TL. 3-20 adet arası %20 indirim, 20'den fazla %40 indirim. && (ve) operatörü ile iki koşulu birlikte kontrol ediyoruz. if-else ile farklı hesaplama yapıyoruz.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    int Adet;\n    int fiyat = 25;\n    double tutar;\n    Adet = Convert.ToInt16(textBoxAdet.Text);\n    if (Adet >= 3 && Adet <= 20)\n    {\n        tutar = fiyat * Adet - fiyat * Adet * 0.2;\n        labelTutar.Text = tutar.ToString() + \"TL\";\n    }\n    else\n    {\n        tutar = fiyat * Adet - fiyat * Adet * 0.4;\n        labelTutar.Text = tutar.ToString() + \"TL\";\n    }\n}",
+    output: "60 adet → 900TL (%20 indirimli)\n20 adet → 400TL (%40 indirimli)"
+  },
+  {
+    id: "t18",
+    badge: "18 · Quiz Uygulaması",
+    title: "Doğru/Yanlış Quiz Uygulaması",
+    explanation: "Bilgi yarışması uygulaması. Sorular sırayla gelir. Doğru/yanlış butonlarına basılınca sayaç artar. Her cevaptan sonra doğru (✓) veya yanlış (✗) resmi gösterilir. Visible özelliği ile gösterip gizliyoruz.",
+    code: "int soruNo = 0, dogru = 0, yanlis = 0;\n\nprivate void Form1_Load(object sender, EventArgs e)\n{\n    pictureBoxTrue.Visible = false;\n    pictureBoxFalse.Visible = false;\n    btnDogru.Enabled = false;\n    btnYanlis.Enabled = false;\n}\n\nprivate void btnDogru_Click(object sender, EventArgs e)\n{\n    if (labelControl.Text == \"Doğru\")\n    {\n        dogru++;\n        pictureBoxTrue.Visible = true;\n    }\n    else\n    {\n        yanlis++;\n        pictureBoxFalse.Visible = true;\n    }\n}",
+    output: "4 soru sonunda:\nDoğru Sayısı: 3\nYanlış Sayısı: 1\nSon mesaj: 'Sorular Bitti... Doğru Sayısı:3 Yanlış Sayısı:1'"
+  },
+  {
+    id: "t19",
+    badge: "19 · Döngüler",
+    title: "Sayının Bölenlerini Bulma",
+    explanation: "Bir sayının bölenlerini bulmak için 2'den başlayıp sayıya kadar döngü dönüyoruz. Eğer sayı döngüdeki sayıya tam bölünüyorsa (kalan = 0, yani sayi % i == 0), o sayı bir bölenidir ve ListBox'a eklenir.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    int sayi = Convert.ToInt16(textBox1.Text);\n    for (int i = 2; i <= sayi; i++)\n    {\n        if (sayi % i == 0)\n        {\n            listBox1.Items.Add(i);\n        }\n    }\n}",
+    output: "Sayı: 12 → Bölenler: 2, 3, 4, 6, 12"
+  },
+  {
+    id: "t20",
+    badge: "20 · Timer",
+    title: "Timer ile Arka Plan Rengi Değiştirme",
+    explanation: "Timer belirli aralıklarla çalışan bir saat gibidir. Her tikinde sayacı artırırız. Sayaç 5 olunca form sarı, 10 olunca mavi olur ve sayacı sıfırlarız. this.BackColor formun arka plan rengini değiştirir.",
+    code: "int sayac = 0;\n\nprivate void timer1_Tick(object sender, EventArgs e)\n{\n    sayac++;\n    if (sayac == 5)\n    {\n        this.BackColor = Color.Yellow;\n    }\n    if (sayac == 10)\n    {\n        this.BackColor = Color.Blue;\n        sayac = 0;\n    }\n}",
+    output: "0-4: Varsayılan renk\n5-9: Sarı renk\n10: Mavi renk, sayac sıfırlanır\nTekrar başlar..."
+  },
+  {
+    id: "t21",
+    badge: "21 · Timer",
+    title: "Dijital Saat Yapımı",
+    explanation: "Timer ile her saniyede saniyeyi artırırız. 60 saniye olunca dakikayı artırır, saniyeyi sıfırlarız. 60 dakika olunca saati artırırız. 24 saat olunca saati sıfırlarız. İç içe if yapıları kullanıyoruz.",
+    code: "int saat = 0, dakika = 0, saniye = 0;\n\nprivate void timer1_Tick(object sender, EventArgs e)\n{\n    saniye++;\n    label1.Text = saniye.ToString();\n    if (saniye == 60)\n    {\n        dakika++;\n        label2.Text = dakika.ToString();\n        saniye = 0;\n        if (dakika == 60)\n        {\n            dakika = 0;\n            saat++;\n            label3.Text = saat.ToString();\n            if (saat == 24)\n            {\n                saat = 0;\n                label3.Text = saat.ToString();\n            }\n        }\n    }\n}",
+    output: "Başlangıç: 00:00:00\nÇalıştıktan sonra: 01:02:00 (örnek)\n24:00:00 olduğunda → 00:00:00"
+  },
+  {
+    id: "t22",
+    badge: "22 · ProgressBar",
+    title: "ProgressBar Artırma ve Azaltma",
+    explanation: "ProgressBar, işlemin ne kadar tamamlandığını gösteren çubuktur. '+' butonu 10'ar 10 arttırır (100'ü geçmez), '-' butonu 10'ar 10 azaltır (0'ın altına düşmez). Value özelliği çubuğun değeridir.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    if (progressBar1.Value == 100)\n    {\n        progressBar1.Value = 100;\n    }\n    else\n    {\n        progressBar1.Value += 10;\n    }\n}\n\nprivate void button2_Click(object sender, EventArgs e)\n{\n    if (progressBar1.Value == 0)\n    {\n        progressBar1.Value = 0;\n    }\n    else\n    {\n        progressBar1.Value -= 10;\n    }\n}",
+    output: "Artır: 0→10→20→30→...→100\nAzalt: 100→90→80→...→0"
+  },
+  {
+    id: "t23",
+    badge: "23 · Random",
+    title: "Rastgele Sayı Üretme",
+    explanation: "Random sınıfı ile rastgele sayılar üretebiliriz. Next(1,10) 1'den 9'a kadar rastgele sayı verir (10 dahil değil!). 3 Label'a farklı rastgele sayılar yazdırıyoruz.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    Random uret = new Random();\n    int s1, s2, s3;\n    s1 = uret.Next(1, 10);\n    s2 = uret.Next(1, 10);\n    s3 = uret.Next(1, 10);\n    label1.Text = s1.ToString();\n    label2.Text = s2.ToString();\n    label3.Text = s3.ToString();\n}",
+    output: "Label1: 7, Label2: 3, Label3: 9 (rastgele)"
+  },
+  {
+    id: "t24",
+    badge: "24 · Random",
+    title: "Rastgele Sayıları Karşılaştırma",
+    explanation: "İki rastgele sayı üretip kullanıcının tahmin etmesini istiyoruz. Eğer TextBox'taki sayıyla Label'daki eşleşiyorsa arka plan yeşil, değilse kırmızı olur. BackColor özelliği arka plan rengini değiştirir.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    Random uret = new Random();\n    int s1, s2, s3, s4;\n    s1 = uret.Next(1, 5);\n    s2 = uret.Next(1, 5);\n    s3 = uret.Next(1, 5);\n    s4 = uret.Next(1, 5);\n    label1.Text = s1.ToString();\n    label2.Text = s2.ToString();\n    textBox1.Text = s3.ToString();\n    textBox2.Text = s4.ToString();\n    if (textBox1.Text == label1.Text)\n        textBox1.BackColor = Color.Green;\n    else\n        textBox1.BackColor = Color.Red;\n    if (textBox2.Text == label2.Text)\n        textBox2.BackColor = Color.Green;\n    else\n        textBox2.BackColor = Color.Red;\n}",
+    output: "Eşleşen: Yeşil arka plan\nEşleşmeyen: Kırmızı arka plan"
+  },
+  {
+    id: "t25",
+    badge: "25 · Random",
+    title: "Rastgele Şifre Üretme",
+    explanation: "Harfler, semboller ve sayı dizileri oluşturup rastgele seçimlerle şifre üretiyoruz. Diziler (array) köşeli parantez {} içinde tanımlanır. Rastgele index seçip birleştiriyoruz.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    string[] harfler = { \"a\",\"b\",\"c\",\"d\",\"e\",\"d\",\"e\",\"f\",\"g\",\"h\" };\n    string[] sembol = { \"+\", \"-\", \"*\", \"/\", \"=\" };\n    Random uret = new Random();\n    int h1, h2, s1, s2, sayi;\n    h1 = uret.Next(0, harfler.Length);\n    h2 = uret.Next(0, harfler.Length);\n    s1 = uret.Next(0, sembol.Length);\n    s2 = uret.Next(0, sembol.Length);\n    sayi = uret.Next(10, 100);\n    label1.Text = harfler[h1] + harfler[h2] + \n                  sembol[s1] + sembol[s2] + sayi;\n}",
+    output: "Örnek şifreler: bb+/49, cd-=25, af*8/73 (rastgele)"
+  },
+  {
+    id: "t26",
+    badge: "26 · Form İşlemleri",
+    title: "Bir Formdan Diğerine Veri Gönderme",
+    explanation: "Form1'den Form2'ye veri gönderiyoruz. Form2'de 'kimden' ve 'mesaj' adlı public değişkenler var. Form1'de yeni Form2 oluşturup değerleri atıyoruz, sonra Form2'yi gösteriyor, Form1'i gizliyoruz.",
+    code: "// Form1'de:\nprivate void button1_Click(object sender, EventArgs e)\n{\n    Form2 yeniForm = new Form2();\n    yeniForm.kimden = textBox1.Text;\n    yeniForm.mesaj = richTextBox1.Text;\n    yeniForm.Show();\n    this.Hide();\n}\n\n// Form2'de (public değişkenler):\npublic string kimden;\npublic string mesaj;\n\nprivate void Form2_Load(object sender, EventArgs e)\n{\n    label1.Text = kimden;\n    label2.Text = mesaj;\n}",
+    output: "Form1: Kimden=Artuklu Üniversitesi\nMesaj=Koridorlarda sigara içmeyin\n→ Form2'de gösterilir"
+  },
+  {
+    id: "t27",
+    badge: "27 · Form İşlemleri",
+    title: "Projeye Yeni Form Ekleme (Visual Studio)",
+    explanation: "Visual Studio'da projenize yeni bir form eklemek için menü adımlarını takip ediyoruz. Bu bir kod değil, Visual Studio ara yüzünde yapılan işlemdir.",
+    code: "Adım 1: Proje menüsü → Yeni Öğe Ekle\nAdım 2: Form (Windows Forms) seç\nAdım 3: Adını Form2.cs yaz\nAdım 4: Ekle butonuna bas",
+    output: "Projeye Form2.cs eklendi.\nSolution Explorer'da görünür."
+  },
+  {
+    id: "t28",
+    badge: "28 · Form İşlemleri",
+    title: "PictureBox ile Farklı Formları Açma",
+    explanation: "Ana formda 3 pictureBox var: Randevu Sistemi, Hasta Girişi, Personel Girişi. Her birine tıklayınca ilgili form açılıyor. Her form için ayrı bir class var.",
+    code: "private void pictureBox1_Click(object sender, EventArgs e)\n{\n    Randevu randevusistem = new Randevu();\n    randevusistem.Show();\n}\n\nprivate void pictureBox2_Click(object sender, EventArgs e)\n{\n    HastaGirisi yeniHasta = new HastaGirisi();\n    yeniHasta.Show();\n}\n\nprivate void pictureBox3_Click(object sender, EventArgs e)\n{\n    PersonelGirisi personelKayit = new PersonelGirisi();\n    personelKayit.Show();\n}",
+    output: "Randevu ikonuna tıkla → Randevu formu açılır\nHasta ikonuna tıkla → HastaGirisi formu açılır\nPersonel ikonuna tıkla → PersonelGirisi formu açılır"
+  },
+  {
+    id: "t29",
+    badge: "29 · Dinamik Kontroller",
+    title: "Kod ile Araç Ekleme (TextBox, Label, Button)",
+    explanation: "Forma sürükle-bırak yerine, kod çalışınca otomatik olarak TextBox, Label ve Button ekleyebiliriz. Her aracın konumu (Location), ismi (Name), yazısı (Text) ve boyutu ayarlanır. this.Controls.Add() ile form üzerine eklenir.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    // TextBox oluştur\n    TextBox txt = new TextBox();\n    Point konumTxt = new Point(200, 50);\n    txt.Name = \"TextBox1\";\n    txt.Text = \"Kullanıcı Adı\";\n    txt.Location = konumTxt;\n    this.Controls.Add(txt);\n\n    // Label oluştur\n    Label lbl = new Label();\n    Point konumLbl = new Point(200, 100);\n    lbl.Name = \"Label1\";\n    lbl.Text = \"Ad\";\n    lbl.Location = konumLbl;\n    this.Controls.Add(lbl);\n\n    // Button oluştur\n    Button btn = new Button();\n    Point konumBtn = new Point(200, 150);\n    btn.Name = \"Button1\";\n    btn.Text = \"Giriş\";\n    btn.Location = konumBtn;\n    btn.Width = 100;\n    btn.Height = 80;\n    btn.BackColor = Color.White;\n    this.Controls.Add(btn);\n}",
+    output: "Butona basınca formda oluşur:\n- TextBox: 'Kullanıcı Adı' (200,50)\n- Label: 'Ad' (200,100)\n- Button: 'Giriş' (200,150), 100×80"
+  },
+  {
+    id: "t30",
+    badge: "30 · Dinamik Kontroller",
+    title: "For Döngüsü ile Dinamik Buton Oluşturma",
+    explanation: "Kullanıcı 12 yazıp 'Ekle' butonuna basınca, 1'den 12'ye kadar 12 tane buton oluşuyor. Her buton yan yana 5'li gruplar halinde sıralanıyor. sutun her 5 butonda bir sıfırlanıyor, satır artırılıyor.",
+    code: "int sutun = 0, satir = 0;\n\nprivate void button1_Click(object sender, EventArgs e)\n{\n    int adet = Convert.ToInt16(textBox1.Text);\n    for (int i = 1; i <= adet; i++)\n    {\n        Button btn = new Button();\n        Point konumBtn = new Point(sutun * 80, satir * 40);\n        btn.Name = \"button\" + i;\n        btn.Text = i.ToString();\n        btn.Location = konumBtn;\n        btn.Width = 80;\n        btn.Height = 40;\n        btn.BackColor = Color.White;\n        this.Controls.Add(btn);\n        sutun++;\n        if (sutun % 5 == 0) \n        { \n            sutun = 0; \n            satir++; \n        }\n    }\n}",
+    output: "Adet:12 → Butonlar oluşur:\n[1] [2] [3] [4] [5]\n[6] [7] [8] [9] [10]\n[11] [12]"
+  },
+  {
+    id: "t31",
+    badge: "31 · Text İşlemleri",
+    title: "RichTextBox Karakter Sayacı",
+    explanation: "RichTextBox'a yazı yazıldıkça kalan karakter sayısını gösteriyoruz. Toplam 80 karakter hakkı var. TextLength özelliği yazılan karakter sayısını verir. 80'den çıkarıp kalanı buluyoruz.",
+    code: "private void richTextBox1_TextChanged(object sender, EventArgs e)\n{\n    int say = 80;\n    label1.Text = richTextBox1.TextLength.ToString();\n    say = say - Convert.ToInt16(label1.Text);\n    label1.Text = \"Kalan \" + say.ToString();\n}",
+    output: "'Mardin Artuklu Üniversitesi..' (29 karakter)\n→ Label: Kalan 51"
+  },
+  {
+    id: "t32",
+    badge: "32 · CheckBox",
+    title: "CheckBox ile Butonu Aktif/Pasif Yapma",
+    explanation: "CheckBox işaretlenince 'Sonraki' butonu aktif olur, işaret kaldırılınca pasif olur. Form yüklenirken buton pasif başlar (Form1_Load). CheckedChanged olayı checkbox değiştiğinde çalışır.",
+    code: "private void Form1_Load(object sender, EventArgs e)\n{\n    button1.Enabled = false;\n}\n\nprivate void checkBox1_CheckedChanged(object sender, EventArgs e)\n{\n    if (checkBox1.Checked == true)\n    {\n        button1.Enabled = true;\n    }\n    else\n    {\n        button1.Enabled = false;\n    }\n}",
+    output: "Checkbox boş → Sonraki butonu PASİF (gri)\nCheckbox işaretli → Sonraki butonu AKTİF"
+  },
+  {
+    id: "t33",
+    badge: "33 · RadioButton",
+    title: "RadioButton ile Cinsiyet Seçimi",
+    explanation: "RadioButton, birkaç seçenekten sadece birini seçmeye yarar. Erkek veya Kadın seçeneği seçilip 'Sonraki' butonuna basılınca seçim MessageBox'ta gösterilir. İki radio button aynı gruptaysa sadece biri seçilir.",
+    code: "private void button1_Click(object sender, EventArgs e)\n{\n    if (radioButton1.Checked == true)\n    {\n        MessageBox.Show(\"Erkek seçildi\");\n    }\n    if (radioButton2.Checked == true)\n    {\n        MessageBox.Show(\"Kadın seçildi\");\n    }\n}",
+    output: "Erkek seçilip Sonraki basılınca → Popup: Erkek seçildi\nKadın seçilip Sonraki basılınca → Popup: Kadın seçildi"
+  }
+];
+
+// ==================== RENDER FUNCTIONS ====================
+
+function renderSidebarNav() {
+  var $nav = $('#sidebar-nav');
+  var navHtml = '<div class="text-uppercase fw-semibold px-3 mb-2" style="font-size:0.625rem;color:var(--text-muted);letter-spacing:0.05em;">Konular</div>';
+
+  $.each(topics, function(i, topic) {
+    var num = topic.badge.split('·')[0].trim();
+    var title = topic.title.length > 28 ? topic.title.substring(0, 28) + '...' : topic.title;
+    navHtml += '<button class="nav-topic" data-id="' + topic.id + '">' +
+               '<span class="badge-num">' + num + '</span>' + title +
+               '</button>';
+  });
+
+  $nav.html(navHtml);
+}
+
+function renderTopicCards() {
+  var $container = $('#topics-container');
+  var html = '';
+
+  $.each(topics, function(i, topic) {
+    html +=
+      '<section id="' + topic.id + '" class="topic-card">' +
+        '<div class="badge-topic">' +
+          '<i class="bi bi-hash" style="font-size:0.6875rem;"></i>' +
+          topic.badge +
+        '</div>' +
+        '<h2 class="topic-title">' + topic.title + '</h2>' +
+        '<div class="explanation-box">' +
+          '<i class="bi bi-lightbulb" style="font-size:1.125rem;"></i>' +
+          '<p>' + topic.explanation + '</p>' +
+        '</div>' +
+        '<div class="section-label code-label">' +
+          '<i class="bi bi-code-slash"></i>' +
+          '<span>Kod</span>' +
+        '</div>' +
+        '<div class="code-block-wrapper">' +
+          '<button class="btn-copy" data-code="' + escapeHtml(topic.code) + '">' +
+            '<i class="bi bi-clipboard"></i> Kopyala' +
+          '</button>' +
+          '<pre><code class="language-csharp">' + escapeHtml(topic.code) + '</code></pre>' +
+        '</div>' +
+        '<div class="output-box">' +
+          '<div class="output-header">' +
+            '<i class="bi bi-eye"></i>' +
+            '<span>Çıktı (Ekranda Ne Göreceksin)</span>' +
+          '</div>' +
+          '<pre>' + topic.output + '</pre>' +
+        '</div>' +
+      '</section>';
+  });
+
+  $container.html(html);
+}
+
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// ==================== INIT ====================
+$(function() {
+  renderSidebarNav();
+  renderTopicCards();
+
+  // Highlight all code blocks
+  hljs.highlightAll();
+
+  // ===== SIDEBAR TOGGLE =====
+  var $sidebar = $('#sidebar');
+  var $backdrop = $('#sidebar-backdrop');
+
+  $('#btn-menu').on('click', function() {
+    $sidebar.addClass('open');
+    $backdrop.addClass('show');
+    $('body').css('overflow', 'hidden');
+  });
+
+  $('#btn-close-sidebar, #sidebar-backdrop').on('click', function() {
+    $sidebar.removeClass('open');
+    $backdrop.removeClass('show');
+    $('body').css('overflow', '');
+  });
+
+  // ===== NAV TOPIC CLICK =====
+  $('#sidebar-nav').on('click', '.nav-topic', function() {
+    var topicId = $(this).data('id');
+    var $el = $('#' + topicId);
+    if ($el.length) {
+      $('html, body').animate({ scrollTop: $el.offset().top - 70 }, 400);
+      // Close sidebar on mobile
+      $sidebar.removeClass('open');
+      $backdrop.removeClass('show');
+      $('body').css('overflow', '');
+    }
+  });
+
+  // ===== COPY BUTTON =====
+  $('#topics-container').on('click', '.btn-copy', function() {
+    var $btn = $(this);
+    var code = $btn.data('code');
+
+    // Unescape HTML entities
+    var tempDiv = document.createElement('div');
+    tempDiv.innerHTML = code;
+    code = tempDiv.textContent || tempDiv.innerText || '';
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(function() {
+        var originalHtml = $btn.html();
+        $btn.html('<i class="bi bi-check2"></i> Kopyalandı!');
+        setTimeout(function() { $btn.html(originalHtml); }, 2000);
+      });
+    } else {
+      // Fallback
+      var $textarea = $('<textarea>').val(code).appendTo('body').select();
+      try { document.execCommand('copy'); } catch(e) {}
+      $textarea.remove();
+      var originalHtml = $btn.html();
+      $btn.html('<i class="bi bi-check2"></i> Kopyalandı!');
+      setTimeout(function() { $btn.html(originalHtml); }, 2000);
+    }
+  });
+
+  // ===== SCROLL TO TOP =====
+  var $scrollBtn = $('#btn-scroll-top');
+
+  $(window).on('scroll', function() {
+    if ($(this).scrollTop() > 600) {
+      $scrollBtn.addClass('show');
+    } else {
+      $scrollBtn.removeClass('show');
+    }
+  });
+
+  $scrollBtn.on('click', function() {
+    $('html, body').animate({ scrollTop: 0 }, 400);
+  });
+
+  // ===== ACTIVE SECTION TRACKING (IntersectionObserver fallback) =====
+  function updateActiveNav() {
+    var scrollPos = $(window).scrollTop() + 150;
+    var activeId = null;
+
+    $('#topics-container section').each(function() {
+      var $section = $(this);
+      var top = $section.offset().top;
+      if (scrollPos >= top) {
+        activeId = $section.attr('id');
+      }
+    });
+
+    if (activeId) {
+      $('#sidebar-nav .nav-topic').removeClass('active');
+      $('#sidebar-nav .nav-topic[data-id="' + activeId + '"]').addClass('active');
+    }
+  }
+
+  $(window).on('scroll', updateActiveNav);
+  updateActiveNav(); // initial
+});
+</script>
+
+</body>
+</html>

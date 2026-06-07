@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<!--
+  ┌──────────────────────────────────────────┐
+  │  C# Windows Forms - Sıfırdan Öğren     │
+  │  Görsel Programlama I - Ders Rehberi   │
+  │                                          │
+  │  Hazırlayan: DEVNANOTEK - İslam ERGÜN   │
+  │  Mardin Artuklu Üniversitesi            │
+  │  Bilgisayar Programcılığı - 1. Sınıf   │
+  └──────────────────────────────────────────┘
+-->
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="DEVNANOTEK - İslam ERGÜN">
+  <title>C# Windows Forms - Sıfırdan Öğren</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1120; --card: #111827; --border: #1e293b;
+      --text: #e2e8f0; --text2: #94a3b8; --muted: #64748b;
+      --sky: #38bdf8; --green: #4ade80; --amber: #fbbf24;
+      --pink: #f472b6; --purple: #c084fc; --red: #f87171; --orange: #fb923c;
+    }
+    * { box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.7; }
+
+    .container-custom { max-width: 900px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+
+    h1 { font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--sky), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem; }
+    h2 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-top: 2.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    h3 { font-size: 1.15rem; font-weight: 700; color: var(--sky); margin-top: 1.8rem; margin-bottom: 0.5rem; }
+
+    .hero { text-align: center; padding: 2rem 0 3rem; }
+    .hero p { color: var(--text2); font-size: 1.1rem; max-width: 600px; margin: 1rem auto 0; }
+
+    .box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; }
+    .box-icon { font-size: 1.8rem; margin-right: 0.75rem; }
+    .box-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.4rem; }
+
+    .note { border-left: 4px solid var(--amber); background: rgba(251,191,36,0.05); padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; margin: 1rem 0; }
+    .note i { color: var(--amber); }
+    .note p { margin: 0; color: var(--text2); font-size: 0.9rem; }
+
+    .tip { border-left: 4px solid var(--green); background: rgba(74,222,128,0.05); padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; margin: 1rem 0; }
+    .tip i { color: var(--green); }
+
+    .warn { border-left: 4px solid var(--red); background: rgba(248,113,113,0.08); padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; margin: 1rem 0; }
+    .warn i { color: var(--red); }
+
+    .code-mini { background: #0b1120; border-radius: 6px; padding: 1rem; margin: 0.5rem 0; overflow-x: auto; }
+    .code-mini pre { margin: 0; font-size: 0.8rem; line-height: 1.5; }
+    .code-mini code { color: #e2e8f0; }
+
+    .analogy { display: flex; align-items: flex-start; gap: 1rem; background: rgba(192,132,252,0.05); border: 1px solid rgba(192,132,252,0.2); border-radius: 12px; padding: 1.25rem; margin: 1rem 0; }
+    .analogy .emoji { font-size: 2rem; flex-shrink: 0; }
+    .analogy p { margin: 0; color: var(--text2); font-size: 0.9rem; }
+
+    .table-dark { background: var(--card); border-radius: 8px; overflow: hidden; }
+    .table-dark th { background: #1e293b; color: var(--sky); font-size: 0.85rem; border-bottom: 2px solid var(--border); }
+    .table-dark td { color: var(--text2); font-size: 0.85rem; border-color: var(--border); }
+
+    code.inline { background: #1e293b; color: var(--pink); padding: 2px 6px; border-radius: 4px; font-size: 0.85em; }
+    strong { color: var(--sky); }
+
+    .sticky-nav { position: sticky; top: 0; background: var(--bg); z-index: 100; padding: 0.75rem 0; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.35rem; justify-content: center; }
+    .sticky-nav a { color: var(--text2); text-decoration: none; font-size: 0.75rem; padding: 0.3rem 0.6rem; border-radius: 6px; transition: all 0.15s; white-space: nowrap; }
+    .sticky-nav a:hover { background: #1e293b; color: var(--sky); }
+
+    .steps { counter-reset: step; }
+    .steps .step { position: relative; padding-left: 2.5rem; margin-bottom: 1.25rem; }
+    .steps .step::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 2px; width: 1.6rem; height: 1.6rem; background: var(--sky); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .summary-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+    .summary-item .icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .summary-item .title { font-weight: 700; font-size: 0.95rem; color: var(--text); margin-bottom: 0.3rem; }
+    .summary-item .desc { color: var(--text2); font-size: 0.8rem; line-height: 1.5; margin: 0; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text2); text-decoration: none; font-size: 0.85rem; margin-bottom: 2rem; transition: color 0.15s; }
+    .back-link:hover { color: var(--sky); }
+  </style>
+</head>
+<body>
+
+<div class="container-custom">
+
+  <!-- Back -->
+  <a href="index.html" class="back-link"><i class="bi bi-arrow-left"></i> Çalışma Sayfasına Dön</a>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>C# Windows Forms<br>Rehberi</h1>
+    <p>Bu sayfayı bitirdiğinde, 33 konunun tamamını anlamış olacaksın. Her şeyi en basit haliyle, <strong>5 yaşındaki birine anlatır gibi</strong> anlattım.</p>
+  </div>
+
+  <!-- Sticky Nav -->
+  <nav class="sticky-nav">
+    <a href="#nedir">Nedir?</a>
+    <a href="#degiskenler">Değişkenler</a>
+    <a href="#kontroller">Kontroller</a>
+    <a href="#properties">Özellikler</a>
+    <a href="#olaylar">Olaylar</a>
+    <a href="#donusturme">Dönüştürme</a>
+    <a href="#if-else">if-else</a>
+    <a href="#for">for Döngüsü</a>
+    <a href="#diziler">Diziler</a>
+    <a href="#messagebox">MessageBox</a>
+    <a href="#timer">Timer</a>
+    <a href="#random">Random</a>
+    <a href="#islemler">Operatörler</a>
+    <a href="#form-gecis">Form Geçişi</a>
+    <a href="#dinamik">Dinamik</a>
+    <a href="#ozet">Özet Tablo</a>
+  </nav>
+
+  <!-- ========== SECTION: NEDIR ========== -->
+  <h2 id="nedir"><i class="bi bi-window-stack"></i> C# Windows Forms Nedir?</h2>
+
+  <div class="analogy">
+    <div class="emoji">🏠</div>
+    <p><strong>Windows Forms</strong> = bilgisayarında gördüğün butonlu, yazılı programların yapıldığı bir <strong>oyun alanı</strong>. Sen bir mimar gibisin. Form dediğimiz şey boş bir kağıt. Üzerine butonlar, yazı kutuları, etiketler koyarak bir program inşa ediyorsun. C# ise bu parçalara "ne yapacaklarını" söyleyen dil.</p>
+  </div>
+
+  <p>Bir Windows Forms programı <strong>3 şeyden</strong> oluşur:</p>
+  <div class="steps">
+    <div class="step"><strong>Form (Pencere)</strong> — Programın kendisi. Boş bir sayfa gibi düşün.</div>
+    <div class="step"><strong>Kontroller (Araçlar)</strong> — Buton, yazı kutusu, etiket gibi parçalar. Formun üzerine koyarsın.</div>
+    <div class="step"><strong>Kod (Olaylar)</strong> — Bu parçalara tıklanınca ne olacağını yazan kısım.</div>
+  </div>
+
+  <div class="tip">
+    <i class="bi bi-lightbulb-fill me-2"></i>
+    <strong>Günlük hayattan örnek:</strong> Bir hesap makinesi düşün. Ekranı (Label), tuşları (Button), yazı yazdığın alanı (TextBox) var. İşte bunların hepsi birer "kontrol"dür. Windows Forms ile sen de böyle programlar yapabilirsin!
+  </div>
+
+  <!-- ========== SECTION: DEGISKENLER ========== -->
+  <h2 id="degiskenler"><i class="bi bi-box-seam"></i> Değişkenler — "Bilgi Saklama Kutuları"</h2>
+
+  <div class="analogy">
+    <div class="emoji">📦</div>
+    <p><strong>Değişken</strong> = üzerinde <strong>etiket</strong> olan bir kutu. Kutunun içine bir şey koyarsın, sonra lazım olduğunda açıp bakarsın. Kutunun üzerindeki etiket onun <strong>adı</strong>dır. Kutunun <strong>rengi</strong> (tipi) ise içine ne tür şey koyabileceğini gösterir.</p>
+  </div>
+
+  <h3>En Çok Kullanılan 3 Kutu Tipi</h3>
+  <table class="table table-dark">
+    <thead><tr><th>Tip</th><th>Kutu Rengi (Anlamı)</th><th>İçine Ne Konur?</th><th>Örnek</th></tr></thead>
+    <tbody>
+      <tr><td><code class="inline">string</code></td><td style="color:var(--pink)">Pembe kutu</td><td>Yazılar, isimler, şehirler</td><td><code class="inline">"Fatih"</code>, <code class="inline">"Ankara"</code></td></tr>
+      <tr><td><code class="inline">int</code></td><td style="color:var(--sky)">Mavi kutu</td><td>Tam sayılar (1, 42, -5)</td><td><code class="inline">42</code>, <code class="inline">0</code>, <code class="inline">-10</code></td></tr>
+      <tr><td><code class="inline">double</code></td><td style="color:var(--green)">Yeşil kutu</td><td>Ondalıklı sayılar</td><td><code class="inline">3.14</code>, <code class="inline">68.5</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="box">
+    <div class="box-title" style="color:var(--pink)"><i class="bi bi-pencil-square box-icon"></i>Değişken Nasıl Yazılır? (Syntax)</div>
+    <div class="code-mini"><pre><code class="language-csharp">string sehir;          // 1.Adım: "sehir" adında pembe bir kutu oluştur (boş)
+sehir = "Ankara";      // 2.Adım: Kutunun içine "Ankara" yazısını koy
+// VEYA tek seferde:
+string sehir = "Ankara";  // Hem oluştur hem değeri koy</code></pre></div>
+  </div>
+
+  <div class="note">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <strong>Altın Kural:</strong> Değişkeni kullanmadan önce mutlaka bir değer vermelisin! Boş kutuyu kullanamazsın. <code class="inline">string sehir; label1.Text = sehir;</code> yazarsan hata alırsın çünkü kutu boş!
+  </div>
+
+  <div class="note">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <strong>Pembe kutuya sayı koyamazsın!</strong> <code class="inline">string</code> içine sadece yazı, <code class="inline">int</code> içine sadece tam sayı konur. Yanlış tipte şey koymaya çalışırsan program kızar.
+  </div>
+
+  <!-- ========== SECTION: KONTROLLER ========== -->
+  <h2 id="kontroller"><i class="bi bi-tools"></i> Form Üzerindeki Araçlar (Kontroller)</h2>
+
+  <p>Bunlar formun üzerine sürükleyip bıraktığın <strong>hazır parçacıklar</strong>. Her birinin kendine has işi var:</p>
+
+  <div class="summary-grid">
+    <div class="summary-item"><div class="icon" style="color:var(--sky)"><i class="bi bi-fonts"></i></div><div class="title">Label</div><p class="desc">Sabit yazı gösterir. Kullanıcı değiştiremez. "Sonuç: 42" gibi.</p></div>
+    <div class="summary-item"><div class="icon" style="color:var(--green)"><i class="bi bi-input-cursor-text"></i></div><div class="title">TextBox</div><p class="desc">Kullanıcının yazı yazdığı kutu. Kullanıcı buraya ismini, sayıyı vs. yazar.</p></div>
+    <div class="summary-item"><div class="icon" style="color:var(--purple)"><i class="bi bi-hand-index-thumb"></i></div><div class="title">Button</div><p class="desc">Tıklanınca bir şey yapan düğme. "Hesapla", "Kaydet" gibi.</p></div>
+    <div class="summary-item"><div class="icon" style="color:var(--amber)"><i class="bi bi-list-ul"></i></div><div class="title">ListBox</div><p class="desc">Liste şeklinde veri gösterir. Alt alta sıralı kayıtlar için.</p></div>
+    <div class="summary-item"><div class="icon" style="color:var(--pink)"><i class="bi bi-menu-button-wide"></i></div><div class="title">ComboBox</div><p class="desc">Açılır liste. Tıklayınca seçenekler aşağı doğru açılır.</p></div>
+    <div class="summary-item"><div class="icon" style="color:var(--red)"><i class="bi bi-check-square"></i></div><div class="title">CheckBox</div><p class="desc">İşaret kutusu. "Kabul ediyorum" gibi onay kutuları.</p></div>
+    <div class="summary-item"><div class="icon" style="color:var(--orange)"><i class="bi bi-record-circle"></i></div><div class="title">RadioButton</div><p class="desc">Tek seçim düğmesi. Birkaç seçenekten sadece biri seçilir.</p></div>
+    <div class="summary-item"><div class="icon" style="color:var(--sky)"><i class="bi bi-image"></i></div><div class="title">PictureBox</div><p class="desc">Resim kutusu. Resim göstermek için veya tıklanabilir ikon olarak kullanılır.</p></div>
+    <div class="summary-item"><div class="icon" style="color:var(--green)"><i class="bi bi-bar-chart-steps"></i></div><div class="title">ProgressBar</div><p class="desc">İlerleme çubuğu. %0'dan %100'e dolan bir çubuk.</p></div>
+    <div class="summary-item"><div class="icon" style="color:var(--purple)"><i class="bi bi-text-paragraph"></i></div><div class="title">RichTextBox</div><p class="desc">Büyük yazı alanı. TextBox'ın çok satırlı, geniş versiyonu.</p></div>
+  </div>
+
+  <!-- ========== SECTION: PROPERTIES ========== -->
+  <h2 id="properties"><i class="bi bi-sliders2"></i> Özellikler (Properties) — Kontrollerin Ayarları</h2>
+
+  <div class="analogy">
+    <div class="emoji">🎛️</div>
+    <p>Her kontrolün <strong>ayar düğmeleri</strong> vardır. Bunlara <strong>özellik (property)</strong> denir. Nokta (.) koyarak ulaşırsın. Mesela <code class="inline">label1.Text</code> = label1'in yazısı, <code class="inline">button1.Enabled</code> = button1'in aktif olup olmadığı.</p>
+  </div>
+
+  <table class="table table-dark">
+    <thead><tr><th>Özellik</th><th>Ne İşe Yarar?</th><th>Hangi Kontrollerde Var?</th><th>Örnek</th></tr></thead>
+    <tbody>
+      <tr><td><code class="inline">.Text</code></td><td>Kontrolün üzerindeki yazı</td><td>Label, TextBox, Button, Form</td><td><code class="inline">label1.Text = "Merhaba";</code></td></tr>
+      <tr><td><code class="inline">.Visible</code></td><td>Görünür / Gizli (<code class="inline">true</code>/<code class="inline">false</code>)</td><td>Hepsi</td><td><code class="inline">pictureBox1.Visible = false;</code></td></tr>
+      <tr><td><code class="inline">.Enabled</code></td><td>Aktif / Pasif (gri olur, tıklanamaz)</td><td>Button, CheckBox, TextBox</td><td><code class="inline">button1.Enabled = false;</code></td></tr>
+      <tr><td><code class="inline">.BackColor</code></td><td>Arka plan rengi</td><td>Hepsi</td><td><code class="inline">this.BackColor = Color.Blue;</code></td></tr>
+      <tr><td><code class="inline">.Items</code></td><td>Listedeki elemanlar (ekleme/silme)</td><td>ComboBox, ListBox</td><td><code class="inline">comboBox1.Items.Add("Mardin");</code></td></tr>
+      <tr><td><code class="inline">.Items.Add()</code></td><td>Listeye yeni eleman ekle</td><td>ComboBox, ListBox</td><td><code class="inline">listBox1.Items.Add("Ali 85");</code></td></tr>
+      <tr><td><code class="inline">.Value</code></td><td>ProgressBar'ın doluluk değeri (0-100)</td><td>ProgressBar</td><td><code class="inline">progressBar1.Value += 10;</code></td></tr>
+      <tr><td><code class="inline">.Checked</code></td><td>İşaretli mi? (<code class="inline">true</code>/<code class="inline">false</code>)</td><td>CheckBox, RadioButton</td><td><code class="inline">if (checkBox1.Checked == true)</code></td></tr>
+      <tr><td><code class="inline">.TextLength</code></td><td>Yazının karakter sayısı</td><td>RichTextBox</td><td><code class="inline">int uzunluk = richTextBox1.TextLength;</code></td></tr>
+      <tr><td><code class="inline">.Width</code> / <code class="inline">.Height</code></td><td>Genişlik / Yükseklik (piksel)</td><td>Hepsi</td><td><code class="inline">btn.Width = 100;</code></td></tr>
+      <tr><td><code class="inline">.Name</code></td><td>Kontrolün kod içindeki adı</td><td>Hepsi</td><td><code class="inline">btn.Name = "Button1";</code></td></tr>
+      <tr><td><code class="inline">.Location</code></td><td>Form üzerindeki konumu (x, y)</td><td>Hepsi</td><td><code class="inline">btn.Location = new Point(200, 50);</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <i class="bi bi-info-circle-fill me-2"></i>
+    <strong>this ne demek?</strong> <code class="inline">this</code> = "bu formun kendisi". <code class="inline">this.BackColor</code> dersen formun arka plan rengini değiştirirsin. <code class="inline">this.Hide()</code> dersen formu gizlersin.
+  </div>
+
+  <!-- ========== SECTION: OLAYLAR ========== -->
+  <h2 id="olaylar"><i class="bi bi-lightning-charge"></i> Olaylar (Events) — "Bir Şey Olduğunda Çalışan Kodlar"</h2>
+
+  <div class="analogy">
+    <div class="emoji">🔔</div>
+    <p><strong>Olay (Event)</strong> = bir şey olduğunda çalan <strong>zil</strong>. "Butona tıklandı" zili çalınca senin yazdığın kod çalışır. "Form yüklendi" zili çalınca başka kod çalışır. Her zile bağlı bir kod bloğu vardır.</p>
+  </div>
+
+  <table class="table table-dark">
+    <thead><tr><th>Olay</th><th>Ne Zaman Çalışır?</th><th>En Çok Kimde Kullanılır?</th></tr></thead>
+    <tbody>
+      <tr><td><code class="inline">Click</code></td><td>Kontrol tıklandığında</td><td>Button, PictureBox</td></tr>
+      <tr><td><code class="inline">Load</code></td><td>Form ilk açıldığında (1 kere)</td><td>Form</td></tr>
+      <tr><td><code class="inline">TextChanged</code></td><td>Yazı her değiştiğinde (harf harf)</td><td>TextBox, RichTextBox</td></tr>
+      <tr><td><code class="inline">Tick</code></td><td>Timer her "tik" yaptığında</td><td>Timer</td></tr>
+      <tr><td><code class="inline">CheckedChanged</code></td><td>CheckBox/RadioButton işaret durumu değişince</td><td>CheckBox, RadioButton</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box">
+    <div class="box-title" style="color:var(--sky)"><i class="bi bi-code-slash box-icon"></i>Olay Metodu Nasıl Yazılır? (Syntax Kalıbı)</div>
+    <div class="code-mini"><pre><code class="language-csharp">private void kontrolAdi_OlayAdi(object sender, EventArgs e)
+{
+    // Olay olduğunda çalışacak kodlar buraya yazılır
+}</code></pre></div>
+  </div>
+
+  <p>Bu kalıp <strong>her olay için aynıdır</strong>. Sadece <code class="inline">kontrolAdi</code> ve <code class="inline">OlayAdi</code> değişir:</p>
+  <div class="code-mini"><pre><code class="language-csharp">private void button1_Click(object sender, EventArgs e) { ... }       // Butona tıklanınca
+private void Form1_Load(object sender, EventArgs e) { ... }            // Form açılınca
+private void timer1_Tick(object sender, EventArgs e) { ... }           // Timer tikleyince
+private void textBox1_TextChanged(object sender, EventArgs e) { ... }  // Yazı değişince</code></pre></div>
+
+  <!-- ========== SECTION: DONUSTURME ========== -->
+  <h2 id="donusturme"><i class="bi bi-arrow-left-right"></i> Veri Tipi Dönüştürme — "Kutu Değiştirme"</h2>
+
+  <div class="analogy">
+    <div class="emoji">🔄</div>
+    <p><code class="inline">textBox1.Text</code> <strong>her zaman pembe kutudur (string)</strong>. Ama sen toplama yapmak istiyorsan mavi kutuya (int) çevirmen gerek. Bunun için özel aletler var: <code class="inline">Convert.ToInt16()</code> ve <code class="inline">.ToString()</code>.</p>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-item" style="border-left: 3px solid var(--sky);">
+      <div class="title" style="color:var(--sky)">Yazıdan → Sayıya</div>
+      <p class="desc"><code class="inline">Convert.ToInt16(degisken)</code><br>Pembe kutudaki yazıyı mavi kutuya (tam sayı) çevirir.<br><br><code class="inline">int.Parse(...)</code> de aynı işi yapar.</p>
+    </div>
+    <div class="summary-item" style="border-left: 3px solid var(--pink);">
+      <div class="title" style="color:var(--pink)">Sayıdan → Yazıya</div>
+      <p class="desc"><code class="inline">degisken.ToString()</code><br>Mavi kutudaki sayıyı pembe kutuya (yazı) çevirir.<br><br>Label'a sayı yazdırmak için şart! Label sadece yazı kabul eder.</p>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="box-title" style="color:var(--amber)"><i class="bi bi-lightbulb-fill box-icon"></i>Neden Dönüştürme Şart?</div>
+    <div class="code-mini"><pre><code class="language-csharp">// YANLIŞ:
+int sonuc = textBox1.Text + textBox2.Text;  // "5" + "3" = "53" (yazı birleşir, toplanmaz!)
+
+// DOĞRU:
+int sayi1 = Convert.ToInt16(textBox1.Text);  // "5" → 5
+int sayi2 = Convert.ToInt16(textBox2.Text);  // "3" → 3
+int sonuc = sayi1 + sayi2;                   // 5 + 3 = 8 (sayılar toplanır!)
+label1.Text = sonuc.ToString();              // 8 → "8" (label'a yazdırmak için geri çevir)</code></pre></div>
+  </div>
+
+  <!-- ========== SECTION: IF-ELSE ========== -->
+  <h2 id="if-else"><i class="bi bi-question-diamond"></i> if-else — "Karar Verme"</h2>
+
+  <div class="analogy">
+    <div class="emoji">🚦</div>
+    <p><strong>if</strong> = "Eğer..." demek. Tıpkı bir trafik ışığı gibi: <strong>Eğer</strong> yeşilse geç, <strong>değilse</strong> (else) dur. Programına karar verdirirsin.</p>
+  </div>
+
+  <h3>Temel Kalıp (Syntax)</h3>
+  <div class="code-mini"><pre><code class="language-csharp">if (KOŞUL)
+{
+    // Koşul doğruysa burası çalışır
+}
+else
+{
+    // Koşul yanlışsa burası çalışır
+}</code></pre></div>
+
+  <div class="tip">
+    <i class="bi bi-lightbulb-fill me-2"></i>
+    <strong>KOŞUL yazarken kullanılan işaretler:</strong><br>
+    <code class="inline">==</code> eşit mi? | <code class="inline">!=</code> eşit değil mi? | <code class="inline">&gt;</code> büyük mü? | <code class="inline">&lt;</code> küçük mü? | <code class="inline">&gt;=</code> büyük veya eşit mi? | <code class="inline">&lt;=</code> küçük veya eşit mi? | <code class="inline">&&</code> VE | <code class="inline">||</code> VEYA
+  </div>
+
+  <div class="box">
+    <div class="box-title" style="color:var(--green)">Gerçek Örnek: Geçti/Kaldı</div>
+    <div class="code-mini"><pre><code class="language-csharp">double ortalama = vize * 0.3 + final * 0.7;
+string durum;
+
+if (ortalama > 59)           // EĞER ortalama 59'dan büyükse...
+{
+    durum = "Geçti";         // ...geçti yaz
+}
+else                         // DEĞİLSE...
+{
+    durum = "Kaldı";         // ...kaldı yaz
+}</code></pre></div>
+  </div>
+
+  <div class="warn">
+    <i class="bi bi-exclamation-diamond-fill me-2"></i>
+    <strong>Sık yapılan hata:</strong> <code class="inline">if (sayi = 5)</code> yazmayın! Bu değer atar, karşılaştırmaz. Karşılaştırmak için <code class="inline">if (sayi == 5)</code> yazın (çift eşittir!). Tek eşittir <strong>atama</strong>, çift eşittir <strong>karşılaştırma</strong>dır.
+  </div>
+
+  <!-- ========== SECTION: FOR ========== -->
+  <h2 id="for"><i class="bi bi-arrow-repeat"></i> for Döngüsü — "Tekrar Tekrar Yap"</h2>
+
+  <div class="analogy">
+    <div class="emoji">🔁</div>
+    <p><strong>for döngüsü</strong> = bir işi <strong>belirli sayıda</strong> tekrarlamak. "10 kere zıpla" gibi. Bilgisayara "şu işi şu kadar kere yap" dersin, o da yorulmadan yapar.</p>
+  </div>
+
+  <h3>Kalıp (Syntax): 3 Parçası Var</h3>
+  <div class="code-mini"><pre><code class="language-csharp">for (BAŞLANGIÇ; KOŞUL; ARTIŞ)
+{
+    // Her turda çalışacak kod
+}
+// BAŞLANGIÇ: Saymaya nereden başlayalım?     (int i = 1)
+// KOŞUL    : Ne zamana kadar devam edelim?    (i <= 5)
+// ARTIŞ    : Her turda sayı ne kadar artsın?  (i++)</code></pre></div>
+
+  <div class="box">
+    <div class="box-title" style="color:var(--sky)">Örnek: 5 kere "Merhaba" yaz</div>
+    <div class="code-mini"><pre><code class="language-csharp">for (int i = 1; i <= 5; i++)   // i=1'den başla, 5'e kadar, her turda 1 artır
+{
+    listBox1.Items.Add("Merhaba " + i);
+}
+// Çıktı:
+// Merhaba 1
+// Merhaba 2
+// Merhaba 3
+// Merhaba 4
+// Merhaba 5</code></pre></div>
+  </div>
+
+  <div class="tip">
+    <i class="bi bi-lightbulb-fill me-2"></i>
+    <strong>i++ ne demek?</strong> = i'yi 1 artır. <code class="inline">i = i + 1</code> ile aynı şeydir. <code class="inline">sayac++</code> de aynı mantık: sayacın değerini 1 artır.
+  </div>
+
+  <!-- ========== SECTION: DIZILER ========== -->
+  <h2 id="diziler"><i class="bi bi-collection"></i> Diziler (Arrays) — "Sıralı Kutular"</h2>
+
+  <div class="analogy">
+    <div class="emoji">📚</div>
+    <p><strong>Dizi</strong> = yan yana dizilmiş, <strong>aynı tipte</strong> çok sayıda kutu. Her kutunun bir <strong>numarası (index)</strong> vardır. İlk kutu 0 numaradır (C#'ta saymaya <strong>0'dan</strong> başlanır!).</p>
+  </div>
+
+  <div class="code-mini"><pre><code class="language-csharp">// Dizi tanımlama:
+string[] sehirler = { "Mardin", "Ankara", "İzmir", "Van" };
+
+// Kutulara erişim (index ile):
+sehirler[0]  // "Mardin" (ilk kutu, index 0!)
+sehirler[1]  // "Ankara"
+sehirler[2]  // "İzmir"
+sehirler[3]  // "Van"
+
+// Dizinin uzunluğu:
+sehirler.Length  // 4 (kaç kutu var?)</code></pre></div>
+
+  <div class="warn">
+    <i class="bi bi-exclamation-diamond-fill me-2"></i>
+    <strong>İndeks 0'dan başlar!</strong> 4 elemanlı dizide son indeks 3'tür. <code class="inline">sehirler[4]</code> dersen hata alırsın, çünkü 4. indeks yok!
+  </div>
+
+  <!-- ========== SECTION: MESSAGEBOX ========== -->
+  <h2 id="messagebox"><i class="bi bi-chat-square-text"></i> MessageBox — "Açılır Pencere"</h2>
+
+  <div class="analogy">
+    <div class="emoji">💬</div>
+    <p><strong>MessageBox</strong> = ekranın ortasında beliren küçük bilgi penceresi. Kullanıcıya mesaj göstermek için kullanılır. "Kaydedildi!", "Emin misiniz?" gibi.</p>
+  </div>
+
+  <h3>Temel Kalıp (Syntax)</h3>
+  <div class="code-mini"><pre><code class="language-csharp">MessageBox.Show("Mesaj", "Başlık", Butonlar, Simge);
+//                     ↑        ↑         ↑       ↑
+//                   Gövde    Pencere   Tamam/  Soru/Ünlem/
+//                   yazısı   başlığı   İptal   Bilgi işareti</code></pre></div>
+
+  <div class="box">
+    <div class="box-title" style="color:var(--pink)">En Çok Kullanılan MessageBox Kalıpları</div>
+    <div class="code-mini"><pre><code class="language-csharp">// Bilgi mesajı:
+MessageBox.Show("Kayıt başarılı!", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+// Onay sorusu:
+MessageBox.Show("Silmek istediğine emin misin?", "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+// Değişkenli mesaj:
+string isim = "Fatih";
+MessageBox.Show("Hoşgeldin: " + isim, "Bilgilendirme", MessageBoxButtons.OK, MessageBoxIcon.Information);
+// Çıktı: Hoşgeldin: Fatih</code></pre></div>
+  </div>
+
+  <table class="table table-dark">
+    <thead><tr><th>Buton Seçenekleri</th><th>Simge Seçenekleri</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code class="inline">MessageBoxButtons.OK</code> — Sadece Tamam<br><code class="inline">MessageBoxButtons.OKCancel</code> — Tamam + İptal<br><code class="inline">MessageBoxButtons.YesNo</code> — Evet + Hayır</td>
+        <td><code class="inline">MessageBoxIcon.Information</code> — Mavi (i)<br><code class="inline">MessageBoxIcon.Question</code> — Soru işareti<br><code class="inline">MessageBoxIcon.Warning</code> — Sarı ünlem</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ========== SECTION: TIMER ========== -->
+  <h2 id="timer"><i class="bi bi-stopwatch"></i> Timer — "Otomatik Zamanlayıcı"</h2>
+
+  <div class="analogy">
+    <div class="emoji">⏰</div>
+    <p><strong>Timer</strong> = belirli aralıklarla <strong>otomatik olarak</strong> kod çalıştıran bir saat. "Her saniye şunu yap" dersin, timer her saniye senin kodunu çalıştırır. Sen bir şey yapmana gerek yok, kendi kendine çalışır!</p>
+  </div>
+
+  <div class="box">
+    <div class="box-title" style="color:var(--orange)">Dijital Saat Nasıl Yapılır?</div>
+    <div class="code-mini"><pre><code class="language-csharp">int saniye = 0;
+
+private void timer1_Tick(object sender, EventArgs e)  // Her tik'te burası çalışır
+{
+    saniye++;               // Saniyeyi 1 artır
+    label1.Text = saniye.ToString();  // Label'da göster
+
+    if (saniye == 60)       // 60 saniye = 1 dakika
+    {
+        dakika++;
+        saniye = 0;         // Saniyeyi sıfırla, baştan say
+    }
+}</code></pre></div>
+  </div>
+
+  <div class="note">
+    <i class="bi bi-info-circle-fill me-2"></i>
+    Timer'ın <code class="inline">Interval</code> özelliği kaç milisaniyede bir tik yapacağını belirler. 1000 = 1 saniye. <code class="inline">Enabled = true</code> yapmazsan timer çalışmaz!
+  </div>
+
+  <!-- ========== SECTION: RANDOM ========== -->
+  <h2 id="random"><i class="bi bi-shuffle"></i> Random — "Rastgele Sayı Üretme"</h2>
+
+  <div class="analogy">
+    <div class="emoji">🎲</div>
+    <p><strong>Random</strong> = <strong>zar atmak</strong> gibidir. Bilgisayara "1 ile 10 arasında rastgele bir sayı söyle" dersin, o da sana sürpriz bir sayı verir. Her seferinde farklı olabilir.</p>
+  </div>
+
+  <div class="box">
+    <div class="box-title" style="color:var(--purple)">Kullanım Kalıbı</div>
+    <div class="code-mini"><pre><code class="language-csharp">// 1.Adım: Zar oluştur
+Random uret = new Random();
+
+// 2.Adım: Rastgele sayı al
+int sayi = uret.Next(1, 10);   // 1 ile 9 arasında rastgele sayı (10 DAHİL DEĞİL!)
+int sayi2 = uret.Next(1, 5);   // 1 ile 4 arasında
+int sayi3 = uret.Next(0, dizi.Length);  // Dizi indeksi için: 0'dan uzunluk-1'e kadar</code></pre></div>
+  </div>
+
+  <div class="warn">
+    <i class="bi bi-exclamation-diamond-fill me-2"></i>
+    <strong>Next(1, 10) → 1 dahil, 10 hariç!</strong> Yani 1,2,3,4,5,6,7,8,9 üretir, 10'u ASLA üretmez. İkinci sayı her zaman <strong>hariçtir</strong>.
+  </div>
+
+  <!-- ========== SECTION: OPERATORLER ========== -->
+  <h2 id="islemler"><i class="bi bi-calculator"></i> Operatörler — "İşlem İşaretleri"</h2>
+
+  <table class="table table-dark">
+    <thead><tr><th>İşaret</th><th>Adı</th><th>Ne Yapar?</th><th>Örnek</th><th>Sonuç</th></tr></thead>
+    <tbody>
+      <tr><td><code class="inline">+</code></td><td>Toplama</td><td>İki sayıyı toplar</td><td><code class="inline">5 + 3</code></td><td>8</td></tr>
+      <tr><td><code class="inline">-</code></td><td>Çıkarma</td><td>İki sayıyı çıkarır</td><td><code class="inline">5 - 3</code></td><td>2</td></tr>
+      <tr><td><code class="inline">*</code></td><td>Çarpma</td><td>İki sayıyı çarpar</td><td><code class="inline">5 * 3</code></td><td>15</td></tr>
+      <tr><td><code class="inline">/</code></td><td>Bölme</td><td>İki sayıyı böler</td><td><code class="inline">5 / 2</code></td><td>2 (int bölmede küsürat atılır!)</td></tr>
+      <tr><td><code class="inline">%</code></td><td>Mod (Kalan)</td><td>Bölmeden kalanı verir</td><td><code class="inline">5 % 2</code></td><td>1 (5'in 2'ye bölümünden kalan)</td></tr>
+      <tr><td><code class="inline">+</code></td><td>Birleştirme</td><td>İki yazıyı birleştirir</td><td><code class="inline">"A" + "B"</code></td><td>"AB"</td></tr>
+      <tr><td><code class="inline">&&</code></td><td>VE</td><td>İki koşul da doğruysa</td><td><code class="inline">x > 3 && x < 10</code></td><td>x 3'ten büyük VE 10'dan küçükse</td></tr>
+      <tr><td><code class="inline">||</code></td><td>VEYA</td><td>En az biri doğruysa</td><td><code class="inline">x == 1 || x == 2</code></td><td>x 1 VEYA 2 ise</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warn">
+    <i class="bi bi-exclamation-diamond-fill me-2"></i>
+    <strong>int bölmede dikkat!</strong> <code class="inline">5 / 2 = 2</code> (2.5 değil!). int bölmesi küsüratı atar. Ondalıklı sonuç için <code class="inline">double</code> kullan: <code class="inline">5.0 / 2.0 = 2.5</code>.
+  </div>
+
+  <!-- ========== SECTION: FORM GECISI ========== -->
+  <h2 id="form-gecis"><i class="bi bi-window-split"></i> Formlar Arası Geçiş — "Pencere Değiştirme"</h2>
+
+  <div class="analogy">
+    <div class="emoji">🪟</div>
+    <p>Bir programda birden fazla <strong>pencere (form)</strong> olabilir. Tıpkı tarayıcıda birden fazla sekme açmak gibi. Bir formdan diğerine geçebilir, hatta veri gönderebilirsin.</p>
+  </div>
+
+  <div class="box">
+    <div class="box-title" style="color:var(--sky)">Form Açma (Temel)</div>
+    <div class="code-mini"><pre><code class="language-csharp">// Form2'yi aç:
+Form2 yeniForm = new Form2();   // Yeni bir Form2 oluştur
+yeniForm.Show();                 // Onu göster (aç)
+this.Hide();                     // Bu formu gizle (Form1'i)</code></pre></div>
+  </div>
+
+  <div class="box">
+    <div class="box-title" style="color:var(--pink)">Veri Gönderme (İleri Seviye)</div>
+    <div class="code-mini"><pre><code class="language-csharp">// Form2.cs içinde public değişken tanımla:
+public string mesaj;   // "public" = her formdan erişilebilir
+
+// Form1.cs içinde değer ata:
+Form2 frm = new Form2();
+frm.mesaj = "Merhaba Form2!";   // public değişkene değer yaz
+frm.Show();
+
+// Form2_Load olayında kullan:
+label1.Text = mesaj;   // Form1'den gelen değeri göster</code></pre></div>
+  </div>
+
+  <!-- ========== SECTION: DINAMIK ========== -->
+  <h2 id="dinamik"><i class="bi bi-magic"></i> Dinamik Kontrol — "Kodla Araç Ekleme"</h2>
+
+  <div class="analogy">
+    <div class="emoji">🧱</div>
+    <p>Forma araçları sürükle-bırak yapmak yerine, <strong>kod çalışırken</strong> de ekleyebilirsin! Bu sayede program çalışırken yeni butonlar, yazı kutuları oluşturabilirsin. Tıpkı bir inşaat robotu gibi!</p>
+  </div>
+
+  <div class="box">
+    <div class="box-title" style="color:var(--green)">Adım Adım: Kodla Buton Ekleme</div>
+    <div class="code-mini"><pre><code class="language-csharp">// 1.Adım: Yeni bir buton oluştur
+Button btn = new Button();
+
+// 2.Adım: Özelliklerini ayarla
+btn.Name = "dinamikButon";      // Adını ver
+btn.Text = "Bana Tıkla!";       // Üstündeki yazı
+btn.Width = 120;                 // Genişlik (piksel)
+btn.Height = 50;                 // Yükseklik (piksel)
+btn.Location = new Point(300, 200);  // Nereye yerleşsin? (x=300, y=200)
+btn.BackColor = Color.Aqua;     // Arka plan rengi
+
+// 3.Adım: Formun üzerine ekle (EN ÖNEMLİ ADIM!)
+this.Controls.Add(btn);         // Bunu yapmazsan buton görünmez!</code></pre></div>
+  </div>
+
+  <!-- ========== SECTION: OZET ========== -->
+  <h2 id="ozet"><i class="bi bi-table"></i> Hızlı Özet Tablosu</h2>
+
+  <table class="table table-dark">
+    <thead><tr><th>Kavram</th><th>Ne İşe Yarar?</th><th>Kalıp / Örnek</th></tr></thead>
+    <tbody>
+      <tr><td>Değişken tanımlama</td><td>Bilgi saklama</td><td><code class="inline">string isim = "Ali";</code></td></tr>
+      <tr><td>TextBox'tan değer alma</td><td>Kullanıcıdan veri okuma</td><td><code class="inline">string yazi = textBox1.Text;</code></td></tr>
+      <tr><td>Label'a değer yazma</td><td>Ekrana yazı gösterme</td><td><code class="inline">label1.Text = "Merhaba";</code></td></tr>
+      <tr><td>Yazıdan sayıya çevirme</td><td>Matematik işlemi için</td><td><code class="inline">int sayi = Convert.ToInt16(textBox1.Text);</code></td></tr>
+      <tr><td>Sayıyı yazıya çevirme</td><td>Label'da göstermek için</td><td><code class="inline">label1.Text = sayi.ToString();</code></td></tr>
+      <tr><td>Karar verme</td><td>Koşula göre çalıştırma</td><td><code class="inline">if (sayi > 10) { ... } else { ... }</code></td></tr>
+      <tr><td>Döngü</td><td>Tekrarlı işlem</td><td><code class="inline">for (int i=0; i&lt;5; i++) { ... }</code></td></tr>
+      <tr><td>Listeye ekleme</td><td>ComboBox / ListBox'a veri ekleme</td><td><code class="inline">listBox1.Items.Add("Eleman");</code></td></tr>
+      <tr><td>MessageBox</td><td>Açılır pencere gösterme</td><td><code class="inline">MessageBox.Show("Mesaj","Başlık",...);</code></td></tr>
+      <tr><td>Timer başlatma</td><td>Otomatik tekrar eden kod</td><td><code class="inline">timer1.Enabled = true;</code> (Interval=1000)</td></tr>
+      <tr><td>Random</td><td>Rastgele sayı</td><td><code class="inline">Random r = new Random(); r.Next(1,10);</code></td></tr>
+      <tr><td>Form kapatma</td><td>Programı sonlandırma</td><td><code class="inline">Application.Exit();</code></td></tr>
+      <tr><td>Form gizleme</td><td>Pencereyi gizleme</td><td><code class="inline">this.Hide();</code></td></tr>
+      <tr><td>Yeni form açma</td><td>Başka pencere gösterme</td><td><code class="inline">new Form2().Show();</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="box" style="margin-top:2rem; text-align:center; background:linear-gradient(135deg, rgba(56,189,248,0.1), rgba(192,132,252,0.1));">
+    <p style="font-size:1.2rem; margin-bottom:0.5rem;"><strong>Şimdi öğrendiklerini test etmeye hazır mısın?</strong></p>
+    <a href="test.html" class="btn btn-lg" style="background:var(--sky);color:#000;font-weight:700;border:none;padding:0.75rem 2rem;border-radius:12px;">
+      <i class="bi bi-pencil-square me-2"></i>Teste Git!
+    </a>
+  </div>
+
+  <footer style="text-align:center;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.75rem;">
+    Mardin Artuklu Üniversitesi · Görsel Programlama I · Öğreten: Fatih Ağalday
+  </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+<script>hljs.highlightAll();</script>
+</body>
+</html>
