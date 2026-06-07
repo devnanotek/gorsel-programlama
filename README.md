@@ -24,7 +24,7 @@
 | **Bölüm** | Bilgisayar Programcılığı |
 | **Sınıf** | 1. Sınıf |
 | **Ders** | Görsel Programlama I |
-| **Öğretim Görevlisi** | Öğr.Gör.Dr. Muhammed Fatih Ağalda |
+| **Öğretim Görevlisi** | Öğr.Gör.Dr. MUHAMMED FATİH AĞALDAY |
 
 ---
 
@@ -95,7 +95,7 @@ Tüm bağımlılıklar **CDN** üzerinden yüklenir, ek kurulum gerektirmez.
 
 1. Repoyu klonlayın:
    ```bash
-   git clone https://github.com/kullaniciadi/csharp-windowsforms-calisma.git
+   git clone https://github.com/devnanotek/gorsel-programlama.git
    ```
 
 2. `www` klasöründeki `index.html` dosyasını tarayıcıda açın.
@@ -169,7 +169,9 @@ Bu proje eğitim amaçlı hazırlanmıştır. Dilediğiniz gibi kullanabilir, pa
 
 <div align="center">
 
-**Mardin Artuklu Üniversitesi · Bilgisayar Programcılığı · 2024-2025**
+**Mardin Artuklu Üniversitesi · Bilgisayar Programcılığı · 2025-2026**
+
+*Hazırlayan: DEVNANOTEK — İslam ERGÜN | Öğr.Gör.Dr. MUHAMMED FATİH AĞALDAY*
 
 *Başarılar!*
 

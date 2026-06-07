@@ -8,7 +8,7 @@
   │  Mardin Artuklu Üniversitesi            │
   │  Bilgisayar Programcılığı - 1. Sınıf   │
   │                                          │
-  │  Öğr.Gör.Dr. Muhammed Fatih Ağalda      │
+  │  Öğr.Gör.Dr. MUHAMMED FATİH AĞALDAY     │
   └──────────────────────────────────────────┘
 -->
 <html lang="tr">
@@ -447,7 +447,7 @@
       </div>
       <h1 class="hero-title">C# Windows Forms<br class="d-none d-sm-block"> Çalışma Sayfası</h1>
       <p class="hero-desc">
-        Hocamız Fatih Ağalday'ın derste işlediği tüm konuları çok basit açıklamalarla,
+        Hocamız Öğr.Gör.Dr. MUHAMMED FATİH AĞALDAY'ın derste işlediği tüm konuları çok basit açıklamalarla,
         kod örnekleriyle ve çıktılarıyla öğren!
       </p>
       <div class="hero-tip">
@@ -465,7 +465,7 @@
     <!-- FOOTER -->
     <footer class="page-footer">
       <p class="footer-text">
-        Mardin Artuklu Üniversitesi · Bilgisayar Programcılığı · Görsel Programlama I · Öğretmen: Fatih Ağalday
+            Mardin Artuklu Üniversitesi · Bilgisayar Programcılığı · Görsel Programlama I · Öğr.Gör.Dr. MUHAMMED FATİH AĞALDAY
       </p>
       <p class="footer-sub">Başarılar! 🎓</p>
     </footer>
@@ -501,7 +501,7 @@ var topics = [
     id: "t2",
     badge: "02 · Temel İşlem",
     title: "TextBox'taki Yazıyı Label'a Yazdırma",
-    explanation: "Kullanıcı bir TextBox'a (yazı kutusu) bir şeyler yazıyor. Butona basınca o yazıyı Label'a aktarıyoruz. Mesela kullanıcı 'Ankara' yazdı, butona basınca labelda 'Ankara' yazıyor.",
+    explanation: "Kullanıcı bir TextBox'a (yazı kutusu) bir şeyler yazıyor. Butona basınca o yazıyı Label'a aktarıyoruz. Mesela kullanıcı 'Ankara' yazdı, butona basınca label'da 'Ankara' yazıyor.",
     code: "private void button1_Click(object sender, EventArgs e)\n{\n    label1.Text = textBox1.Text;\n}",
     output: "TextBox: Ankara → Label: Ankara"
   },
@@ -517,7 +517,7 @@ var topics = [
     id: "t4",
     badge: "04 · Değişkenler",
     title: "İki Sayıyı Toplama",
-    explanation: "İki TextBox'tan sayı alıp topluyoruz. Ama dikkat! TextBox'taki değerler yazı (string) olduğu için önce sayıya (int) çevirmemiz lazım. Convert.ToInt16() bunu yapıyor. Sonucu labelda gösteriyoruz.",
+    explanation: "İki TextBox'tan sayı alıp topluyoruz. Ama dikkat! TextBox'taki değerler yazı (string) olduğu için önce sayıya (int) çevirmemiz lazım. Convert.ToInt16() bunu yapıyor. Sonucu label'da gösteriyoruz.",
     code: "private void button1_Click(object sender, EventArgs e)\n{\n    int sayi1, sayi2, sonuc;\n    sayi1 = Convert.ToInt16(textBox1.Text);\n    sayi2 = Convert.ToInt16(textBox2.Text);\n    sonuc = sayi1 + sayi2;\n    label3.Text = sonuc.ToString();\n    label3.Visible = true;\n}",
     output: "Sayı1: 8 + Sayı2: 4 = 12"
   },
@@ -558,8 +558,8 @@ var topics = [
     badge: "09 · MessageBox",
     title: "MessageBox'ta Değişken Kullanma",
     explanation: "MessageBox'a direkt yazı yerine, bir değişkenin değerini de gösterebiliriz. 'user' değişkenindeki ismi mesajın içine ekliyoruz. String birleştirmede + işareti kullanılır.",
-    code: "string user = \"Fatih Ağalday\";\n\nprivate void button1_Click(object sender, EventArgs e)\n{\n    MessageBox.Show(\n        \"Hoşgeldin: \" + user,\n        \"Bilgilendirme\",\n        MessageBoxButtons.OKCancel,\n        MessageBoxIcon.Question\n    );\n}",
-    output: "[Pencere Açılır]\nBaşlık: Bilgilendirme\nMesaj: Hoşgeldin: Fatih Ağalday\nButonlar: [Tamam] [İptal]\nSimge: Soru işareti (?)"
+    code: "string user = \"Fatih Ağalday\";\n\nprivate void button1_Click(object sender, EventArgs e)\n{\n    MessageBox.Show(\n        \"Hoş geldin: \" + user,\n        \"Bilgilendirme\",\n        MessageBoxButtons.OKCancel,\n        MessageBoxIcon.Question\n    );\n}",
+    output: "[Pencere Açılır]\nBaşlık: Bilgilendirme\nMesaj: Hoş geldin: Fatih Ağalday\nButonlar: [Tamam] [İptal]\nSimge: Soru işareti (?)"
   },
   {
     id: "t10",
@@ -661,7 +661,7 @@ var topics = [
     id: "t22",
     badge: "22 · ProgressBar",
     title: "ProgressBar Artırma ve Azaltma",
-    explanation: "ProgressBar, işlemin ne kadar tamamlandığını gösteren çubuktur. '+' butonu 10'ar 10 arttırır (100'ü geçmez), '-' butonu 10'ar 10 azaltır (0'ın altına düşmez). Value özelliği çubuğun değeridir.",
+    explanation: "ProgressBar, işlemin ne kadar tamamlandığını gösteren çubuktur. '+' butonu 10'ar 10 artırır (100'ü geçmez), '-' butonu 10'ar 10 azaltır (0'ın altına düşmez). Value özelliği çubuğun değeridir.",
     code: "private void button1_Click(object sender, EventArgs e)\n{\n    if (progressBar1.Value == 100)\n    {\n        progressBar1.Value = 100;\n    }\n    else\n    {\n        progressBar1.Value += 10;\n    }\n}\n\nprivate void button2_Click(object sender, EventArgs e)\n{\n    if (progressBar1.Value == 0)\n    {\n        progressBar1.Value = 0;\n    }\n    else\n    {\n        progressBar1.Value -= 10;\n    }\n}",
     output: "Artır: 0→10→20→30→...→100\nAzalt: 100→90→80→...→0"
   },
